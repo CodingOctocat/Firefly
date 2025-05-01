@@ -1,0 +1,151 @@
+﻿<hc:Window x:Class="Firefly.Views.AboutWindow"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:app="clr-namespace:Firefly"
+           xmlns:c="clr-namespace:Firefly.Controls"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:hc="https://handyorg.github.io/handycontrol"
+           xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+           xmlns:m="clr-namespace:Firefly.Models"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:vm="clr-namespace:Firefly.ViewModels"
+           Title="关于 Firefly"
+           Height="480"
+           d:DataContext="{d:DesignInstance Type=vm:AboutViewModel,
+                                            IsDesignTimeCreatable=True}"
+           Background="{DynamicResource RegionBrush}"
+           Icon="/Resources/firefly.ico"
+           ResizeMode="NoResize"
+           SizeToContent="Width"
+           UseLayoutRounding="True"
+           WindowStartupLocation="CenterScreen"
+           mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <hc:SimpleStackPanel Grid.ColumnSpan="2"
+                             HorizontalAlignment="Center"
+                             Orientation="Horizontal">
+            <Image Width="48"
+                   Height="48"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   Source="/Resources/firefly.png" />
+
+            <hc:SimpleText Margin="12,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="{StaticResource HeadFontSize}"
+                           FontWeight="Bold">
+                <hc:SimpleText.Text>
+                    <MultiBinding StringFormat="{}{0} - {1}">
+                        <Binding Source="{x:Static app:App.AppFullName}" />
+                        <Binding Source="{x:Static app:App.VersionString}" />
+                    </MultiBinding>
+                </hc:SimpleText.Text>
+            </hc:SimpleText>
+        </hc:SimpleStackPanel>
+
+        <hc:UniformSpacingPanel Grid.Row="1"
+                                Margin="0,24,0,0"
+                                Orientation="Vertical"
+                                VerticalSpacing="8">
+            <hc:SimpleText Text="主页:" />
+
+            <hc:SimpleText Text="议题:" />
+
+            <hc:SimpleText Text="讨论:" />
+
+            <hc:SimpleText Text="许可证:" />
+
+            <hc:SimpleText Text="开发者:" />
+
+            <hc:SimpleText Text="语言:" />
+
+            <hc:SimpleText Text="框架:" />
+
+            <hc:SimpleText Text="编译:" />
+        </hc:UniformSpacingPanel>
+
+        <hc:UniformSpacingPanel Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="8,24,0,0"
+                                HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                VerticalSpacing="8">
+            <c:HyperlinkTextBlock NavigateUri="{x:Static m:GitHubConstants.RepositoryUrl}" />
+
+            <c:HyperlinkTextBlock NavigateUri="{x:Static m:GitHubConstants.IssuesUrl}" />
+
+            <c:HyperlinkTextBlock NavigateUri="{x:Static m:GitHubConstants.DiscussionsUrl}" />
+
+            <c:HyperlinkTextBlock DisplayText="MIT License"
+                                  NavigateUri="{x:Static m:GitHubConstants.LicenseUrl}" />
+
+            <c:HyperlinkTextBlock DisplayText="CodingNinja@outlook.com"
+                                  NavigateUri="mailto:CodingNinja@outlook.com?subject=[Firefly 反馈] &amp;body=告诉我有关你的任何意见或建议！"
+                                  ToolTip="📧联系开发者 &lt;CodingNinja@outlook.com&gt;" />
+
+            <hc:SimpleStackPanel Orientation="Horizontal">
+                <c:HyperlinkTextBlock DisplayText="C#"
+                                      NavigateUri="https://docs.microsoft.com/dotnet/csharp/"
+                                      ToolTip="C#（发音为 /C sharp/）是一种简单、现代、面向对象、类型安全的编程语言" />
+
+                <hc:SimpleText Foreground="{DynamicResource SecondaryTextBrush}"
+                               Text="/" />
+
+                <c:HyperlinkTextBlock DisplayText=".NET"
+                                      NavigateUri="https://docs.microsoft.com/zh-cn/dotnet/"
+                                      ToolTip=".NET 是一个免费的跨平台开放源代码开发人员平台，用于生成多种类型的应用程序" />
+
+            </hc:SimpleStackPanel>
+
+            <c:HyperlinkTextBlock DisplayText="WPF"
+                                  NavigateUri="https://docs.microsoft.com/zh-cn/dotnet/desktop/wpf/"
+                                  ToolTip="Windows Presentation Foundation（WPF）是一个 UI 框架，用于在 .NET 平台上构建具有视觉吸引力的 Windows 桌面应用程序" />
+
+            <hc:SimpleText Text="{Binding ReleasedLongTime, Mode=OneTime}" />
+        </hc:UniformSpacingPanel>
+
+        <GroupBox Grid.Row="2"
+                  Grid.ColumnSpan="2"
+                  Margin="0,12,0,0"
+                  Style="{StaticResource GroupBoxOriginal}">
+            <GroupBox.Header>
+                <hc:SimpleText Text="{Binding ElementName=lbAppDependencies, Path=Items.Count, StringFormat='Firefly 的构建使用了以下库 ({0})'}" />
+            </GroupBox.Header>
+
+            <ListBox x:Name="lbAppDependencies"
+                     d:ItemsSource="{d:SampleData ItemCount=5}"
+                     ItemsSource="{Binding AppDependencies}">
+                <ListBox.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource ListBoxItemBaseStyle.Small}"
+                           TargetType="{x:Type ListBoxItem}">
+                        <EventSetter Event="MouseDoubleClick"
+                                     Handler="LbAppDependencies_Item_MouseDoubleClick" />
+
+                        <Setter Property="ToolTip">
+                            <Setter.Value>
+                                <ToolTip Content="{Binding Name}"
+                                         ContentStringFormat="https://www.nuget.org/packages/{0}" />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </GroupBox>
+    </Grid>
+</hc:Window>

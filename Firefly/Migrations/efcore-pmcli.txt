@@ -1,0 +1,7 @@
+﻿// PM> 程序包管理器控制台 EF Core 命令行
+
+// 初始化迁移
+Add-Migration InitialCreate
+
+// 更新数据库
+Update-Database

@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="Firefly.Views.TaskProgressView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:m="clr-namespace:Firefly.Models"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:FireflyViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignWidth="500"
+             mc:Ignorable="d">
+    <hc:SimpleStackPanel>
+        <ProgressBar d:Value="0.5"
+                     IsIndeterminate="{Binding IsWriting}"
+                     Maximum="1"
+                     Value="{Binding ProgressTimer.ProgressPercentage, Mode=OneWay}">
+            <ProgressBar.Style>
+                <Style BasedOn="{StaticResource ProgressBarBaseStyle}"
+                       TargetType="{x:Type ProgressBar}">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding FireTaskStatus}"
+                                     Value="{x:Static m:FireTaskStatus.Completed}">
+                            <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding FireTaskStatus}"
+                                     Value="{x:Static m:FireTaskStatus.Cancelled}">
+                            <Setter Property="Foreground" Value="{DynamicResource WarningBrush}" />
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding FireTaskStatus}"
+                                     Value="{x:Static m:FireTaskStatus.Error}">
+                            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ProgressBar.Style>
+        </ProgressBar>
+
+        <UniformGrid Margin="4,4,4,0"
+                     Columns="3">
+            <hc:SimpleText HorizontalAlignment="Left"
+                           d:Text="已用时间: 00:00"
+                           Text="{Binding ProgressTimer.UsedTime, Converter={StaticResource TimeSpanFormatConverter}, StringFormat='已用时间: {0}'}" />
+
+            <TextBlock HorizontalAlignment="Center">
+                <Run Text="第 " /><Run Text="{Binding ProgressTimer.CurrentProgress, Mode=OneWay, StringFormat={}{0:N0}}" /><Run Text=" 项, 共 " /><Run Text="{Binding ProgressTimer.TotalTasks, Mode=OneWay, StringFormat={}{0:N0}}" /><Run Text=" 项" />
+            </TextBlock>
+
+            <hc:SimpleText HorizontalAlignment="Right"
+                           d:Text="预计剩余: 00:00"
+                           Text="{Binding ProgressTimer.Countdown, Converter={StaticResource TimeSpanFormatConverter}, StringFormat='预计剩余: {0}', TargetNullValue='预计剩余: 正在估算...'}" />
+        </UniformGrid>
+    </hc:SimpleStackPanel>
+</UserControl>

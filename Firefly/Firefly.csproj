@@ -1,0 +1,104 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net9.0-windows7.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationIcon>Resources\firefly.ico</ApplicationIcon>
+		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+		<StartupObject>Firefly.App</StartupObject>
+		<Version>8.0.0</Version>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<SignAssembly>True</SignAssembly>
+		<SatelliteResourceLanguages>zh-Hans;zh-CN</SatelliteResourceLanguages>
+		<PlatformTarget>x64</PlatformTarget>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsNamespaces>
+	</PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Content Include="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--<Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(OutputFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="CopyCustomContentOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles="@(OutputFiles)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+  </Target>-->
+
+	<ItemGroup>
+		<PackageReference Include="AngleSharp" Version="1.3.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" Version="9.0.0" />
+		<PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
+		<PackageReference Include="HandyControl" Version="3.5.1" />
+		<PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="2.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+		<PackageReference Include="NPOI" Version="2.7.3" />
+		<PackageReference Include="Octokit" Version="14.0.0" />
+		<PackageReference Include="System.Management" Version="9.0.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Resources\Data\referencelist.txt" />
+    <Resource Include="Resources\Data\国家地区列表.txt" />
+	  <Resource Include="Resources\Data\消防产品目录表.txt" />
+	  <Resource Include="Resources\Data\中国省市县区列表.txt" />
+	  <Resource Include="Resources\artist_palette_3d.png" />
+	  <Resource Include="Resources\circled_m_3d.png" />
+	  <Resource Include="Resources\counterclockwise_arrows_button_3d.png" />
+	  <Resource Include="Resources\crescent_moon_3d.png" />
+	  <Resource Include="Resources\firefly-dbsync.ico" />
+	  <Resource Include="Resources\firefly-dbsync.png" />
+	  <Resource Include="Resources\firefly-mergedb.ico" />
+	  <Resource Include="Resources\firefly-mergedb.png" />
+	  <Resource Include="Resources\firefly.ico" />
+	  <Resource Include="Resources\firefly.png" />
+	  <Resource Include="Resources\purple_circle_3d.png" />
+	  <Resource Include="Resources\sun_3d.png" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="免责声明.txt" />
+    <Content Include="免责声明.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
+	</ItemGroup>
+
+</Project>

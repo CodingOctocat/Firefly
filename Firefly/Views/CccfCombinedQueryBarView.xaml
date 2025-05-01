@@ -1,0 +1,157 @@
+﻿<UserControl x:Class="Firefly.Views.CccfCombinedQueryBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="clr-namespace:Firefly.Behaviors"
+             xmlns:conv="clr-namespace:Firefly.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:CccfMainQueryViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignWidth="800"
+             FocusManager.IsFocusScope="True"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <conv:DateOnlyToDateTimeConverter x:Key="DateOnlyToDateTimeConverter" />
+
+        <Style BasedOn="{StaticResource LeftTitleClearableTextBoxStyle}"
+               TargetType="{x:Type hc:TextBox}">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="hc:ScrollViewerAttach.Orientation" Value="Horizontal" />
+        </Style>
+
+        <Style BasedOn="{StaticResource ComboBoxPlusBaseStyle}"
+               TargetType="{x:Type hc:ComboBox}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="IsEditable" Value="True" />
+            <Setter Property="hc:InfoElement.ShowClearButton" Value="True" />
+            <Setter Property="hc:TitleElement.TitlePlacement" Value="Left" />
+        </Style>
+
+
+        <Style BasedOn="{StaticResource DatePickerPlusBaseStyle}"
+               TargetType="{x:Type hc:DatePicker}">
+            <Setter Property="b:InputElementContextMenuBehavior.UseCustomStyle" Value="True" />
+            <Setter Property="hc:InfoElement.ShowClearButton" Value="True" />
+            <Setter Property="hc:TitleElement.TitlePlacement" Value="Left" />
+        </Style>
+    </UserControl.Resources>
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Return"
+                    Command="{Binding NavigateToQueryCommand}" />
+    </UserControl.InputBindings>
+
+    <hc:SimpleStackPanel>
+        <hc:UniformSpacingPanel hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY200}"
+                                ChildWrapping="Wrap"
+                                Spacing="12">
+            <Border Width="175"
+                    Height="30" />
+
+            <hc:TextBox x:Name="tbEnt"
+                        MinWidth="300"
+                        hc:TitleElement.Title="企业名称"
+                        Text="{Binding CccfQueryViewModel.CombinedRequest.EnterpriseName, UpdateSourceTrigger=PropertyChanged}" />
+
+            <hc:TextBox x:Name="tbName"
+                        MinWidth="244"
+                        hc:TitleElement.Title="产品名称"
+                        Text="{Binding CccfQueryViewModel.CombinedRequest.ProductName, UpdateSourceTrigger=PropertyChanged}" />
+
+            <hc:TextBox x:Name="tbModel"
+                        MinWidth="230"
+                        hc:TitleElement.Title="产品型号"
+                        Text="{Binding CccfQueryViewModel.CombinedRequest.Model, UpdateSourceTrigger=PropertyChanged}" />
+
+            <hc:TextBox x:Name="tbCertNo"
+                        MinWidth="245"
+                        hc:InfoElement.Placeholder="在线查询不支持模糊匹配"
+                        hc:TitleElement.Title="证书编号"
+                        Text="{Binding CccfQueryViewModel.CombinedRequest.CertificateNo, UpdateSourceTrigger=PropertyChanged}" />
+
+            <hc:SimpleStackPanel Orientation="Horizontal">
+                <hc:TextBox x:Name="tbReportNo"
+                            MinWidth="204"
+                            hc:TitleElement.Title="检验报告"
+                            Text="{Binding CccfQueryViewModel.CombinedRequest.ReportNo, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ToggleButton Margin="12,0,0,0"
+                              hc:IconSwitchElement.Geometry="{StaticResource RightGeometry}"
+                              hc:IconSwitchElement.GeometrySelected="{StaticResource LeftGeometry}"
+                              IsChecked="{Binding IsOpenMoreQueryConditions}"
+                              IsVisibleChanged="Input_IsVisibleChanged"
+                              Style="{StaticResource ToggleButtonIcon.Small}"
+                              ToolTip="{Binding ToggleMoreQueryToolTip}"
+                              Visibility="{Binding IsOpenMoreQueryConditions, Converter={StaticResource Boolean2VisibilityReConverter}}" />
+            </hc:SimpleStackPanel>
+        </hc:UniformSpacingPanel>
+
+        <hc:TransitioningContentControl Margin="0,12,0,0"
+                                        TransitionMode="Top2BottomWithFade"
+                                        Visibility="{Binding IsOpenMoreQueryConditions, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <hc:UniformSpacingPanel hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY200}"
+                                    ChildWrapping="Wrap"
+                                    Spacing="12">
+                <hc:ComboBox x:Name="cboStatus"
+                             MinWidth="175"
+                             d:Text="有效"
+                             hc:TitleElement.Title="证书状态"
+                             ItemsSource="{x:Static vm:CccfMainQueryViewModel.CccfCertificateStatuses}"
+                             Text="{Binding CccfQueryViewModel.CombinedRequest.Status}" />
+
+                <hc:DatePicker x:Name="dpCertStart"
+                               Width="256"
+                               hc:TitleElement.Title="发(换)证日期"
+                               SelectedDate="{Binding CccfQueryViewModel.CombinedRequest.CertDateStart, Converter={StaticResource DateOnlyToDateTimeConverter}}" />
+
+                <hc:DatePicker x:Name="dpCertEnd"
+                               Width="288"
+                               hc:TitleElement.Title="发(换)证日期(截止)"
+                               SelectedDate="{Binding CccfQueryViewModel.CombinedRequest.CertDateEnd, Converter={StaticResource DateOnlyToDateTimeConverter}}" />
+
+                <hc:DatePicker x:Name="dpIssuedStart"
+                               Width="256"
+                               hc:InfoElement.Placeholder="仅支持在线查询"
+                               hc:TitleElement.Title="报告签发日期"
+                               IsEnabled="{Binding IsInOnlineQueryMode}"
+                               SelectedDate="{Binding CccfQueryViewModel.CombinedRequest.IssuedDateStart, Converter={StaticResource DateOnlyToDateTimeConverter}}"
+                               ToolTip="仅支持在线查询"
+                               ToolTipService.ShowOnDisabled="True" />
+
+                <hc:DatePicker x:Name="dpIssuedEnd"
+                               Width="288"
+                               hc:InfoElement.Placeholder="仅支持在线查询"
+                               hc:TitleElement.Title="报告签发日期(截止)"
+                               IsEnabled="{Binding IsInOnlineQueryMode}"
+                               SelectedDate="{Binding CccfQueryViewModel.CombinedRequest.IssuedDateEnd, Converter={StaticResource DateOnlyToDateTimeConverter}}"
+                               ToolTip="仅支持在线查询"
+                               ToolTipService.ShowOnDisabled="True" />
+
+                <hc:SimpleStackPanel Orientation="Horizontal">
+                    <hc:ComboBox x:Name="cboTestingCenter"
+                                 MinWidth="288"
+                                 HorizontalContentAlignment="Left"
+                                 d:Text="国家防火建筑材料质量监督检验中心"
+                                 hc:InfoElement.Placeholder="仅支持在线查询"
+                                 hc:TitleElement.Title="检验中心"
+                                 IsEnabled="{Binding IsInOnlineQueryMode}"
+                                 ItemsSource="{x:Static vm:CccfMainQueryViewModel.CccfTestingCenters}"
+                                 Text="{Binding CccfQueryViewModel.CombinedRequest.TestingCenter}"
+                                 ToolTip="仅支持在线查询"
+                                 ToolTipService.ShowOnDisabled="True" />
+
+                    <ToggleButton Margin="12,0,0,0"
+                                  hc:IconSwitchElement.Geometry="{StaticResource RightGeometry}"
+                                  hc:IconSwitchElement.GeometrySelected="{StaticResource LeftGeometry}"
+                                  IsChecked="{Binding IsOpenMoreQueryConditions}"
+                                  IsVisibleChanged="Input_IsVisibleChanged"
+                                  Style="{StaticResource ToggleButtonIcon.Small}"
+                                  ToolTip="{Binding ToggleMoreQueryToolTip}" />
+                </hc:SimpleStackPanel>
+            </hc:UniformSpacingPanel>
+        </hc:TransitioningContentControl>
+    </hc:SimpleStackPanel>
+</UserControl>

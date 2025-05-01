@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Firefly.Views.FileSelectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="clr-namespace:Firefly.Behaviors"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:FireflyViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignWidth="500"
+             mc:Ignorable="d">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <hc:TextBox b:TripleClickToSelectAllBehavior.IsEnabled="True"
+                    hc:InfoElement.Placeholder="选择或拖动 .docx 文件到此窗口..."
+                    hc:ScrollViewerAttach.Orientation="Horizontal"
+                    AllowDrop="True"
+                    HorizontalScrollBarVisibility="Auto"
+                    MaxLines="1"
+                    Style="{StaticResource ReadOnlyLeftTitleTextBoxStyle}"
+                    Text="{Binding InputFilePath, Mode=OneWay}"
+                    TextWrapping="NoWrap" />
+
+        <hc:SplitButton Grid.Column="1"
+                        Margin="4,0,0,0"
+                        Command="{Binding OpenFileDialogCommand}"
+                        Content="选择(_O)...">
+            <i:Interaction.Behaviors>
+                <b:SplitButtonToggleDropDownBehavior />
+            </i:Interaction.Behaviors>
+
+            <hc:SplitButton.DropDownContent>
+                <Menu Style="{StaticResource SplitButtonDropDownMenuStyle}">
+                    <MenuItem Command="{Binding ReloadDocumentCommand}"
+                              Header="重新加载(_R)" />
+                </Menu>
+            </hc:SplitButton.DropDownContent>
+        </hc:SplitButton>
+    </Grid>
+</UserControl>

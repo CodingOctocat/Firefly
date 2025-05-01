@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly", "Firefly\Firefly.csproj", "{537ADFED-4A72-4A63-842B-3772ED1A775A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{53076C4A-5B51-488E-910A-412D5A18CA10}"
+	ProjectSection(SolutionItems) = preProject
+		..\IPConfig\.editorconfig = ..\IPConfig\.editorconfig
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{537ADFED-4A72-4A63-842B-3772ED1A775A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537ADFED-4A72-4A63-842B-3772ED1A775A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537ADFED-4A72-4A63-842B-3772ED1A775A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537ADFED-4A72-4A63-842B-3772ED1A775A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8016B736-2A0F-4BB5-BB2A-D33EC052BF76}
+	EndGlobalSection
+EndGlobal

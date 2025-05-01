@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="MyPrimaryBrush"
+                     Color="{StaticResource PrimaryColor}" />
+
+    <!--  某些控件(TextBox.Foreground 等)的画笔只支持 SolidColorBrush，而 PrimaryBrush 是 LinearGradientBrush  -->
+    <SolidColorBrush x:Key="MyPrimarySolidBrush"
+                     Color="{StaticResource PrimaryColor}" />
+
+    <SolidColorBrush x:Key="MyLightPrimaryBrush"
+                     Color="{StaticResource LightPrimaryColor}" />
+
+    <SolidColorBrush x:Key="MyWarningBrush"
+                     Color="DarkOrange" />
+
+    <SolidColorBrush x:Key="MyLightSuccessTableBrush"
+                     Color="{StaticResource LightSuccessColor}" />
+
+    <SolidColorBrush x:Key="MyLightDangerTableBrush"
+                     Color="{StaticResource LightDangerColor}" />
+
+    <SolidColorBrush x:Key="MyReverseBrush"
+                     Color="Black" />
+
+    <SolidColorBrush x:Key="MySecondaryBorderBrush"
+                     Color="{StaticResource SecondaryBorderColor}" />
+
+    <SolidColorBrush x:Key="MyReverseTextBrush"
+                     Color="{StaticResource ReverseTextColor}" />
+
+</ResourceDictionary>

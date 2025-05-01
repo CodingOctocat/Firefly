@@ -1,0 +1,255 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:b="clr-namespace:Firefly.Behaviors"
+                    xmlns:c="clr-namespace:Firefly.Controls"
+                    xmlns:conv="clr-namespace:Firefly.Converters"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:hc="https://handyorg.github.io/handycontrol"
+                    xmlns:m="clr-namespace:Firefly.Models"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:resp="clr-namespace:Firefly.Models.Responses"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    mc:Ignorable="d">
+    <conv:StringContainsConverter x:Key="StringContainsConverter" />
+    <conv:AllEqualsMultiConverter x:Key="AllEqualsMultiConverter" />
+
+    <Style x:Key="CccfTextBoxStyle"
+           BasedOn="{StaticResource ReadOnlyLeftTitleTextBoxStyle}"
+           TargetType="{x:Type c:FindableTextBox}">
+        <Setter Property="Background" Value="{x:Null}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="b:ScrollViewerHelper.ShiftWheelScrollsHorizontally" Value="True" />
+        <Setter Property="b:ScrollViewerHelper.ShiftWheelScrollsHorizontally" Value="True" />
+        <Setter Property="hc:InfoElement.Placeholder" Value="N/A" />
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsMatch}"
+                         Value="{StaticResource True}">
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="{DynamicResource MyWarningBrush}" />
+            </DataTrigger>
+
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsMatch}" Value="{StaticResource True}" />
+
+                    <Condition Value="{StaticResource True}">
+                        <Condition.Binding>
+                            <MultiBinding Converter="{StaticResource AllEqualsMultiConverter}">
+                                <Binding Path="Index" />
+                                <Binding Path="DataContext.FindInPageBarViewModel.FindIndex"
+                                         RelativeSource="{RelativeSource AncestorType={x:Type DataGrid}}" />
+                            </MultiBinding>
+                        </Condition.Binding>
+                    </Condition>
+                </MultiDataTrigger.Conditions>
+
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="OrangeRed" />
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CccfSimpleListBoxStyle"
+           BasedOn="{StaticResource ListBoxCustom}"
+           TargetType="{x:Type ListBox}">
+        <Setter Property="Background" Value="{x:Null}" />
+        <Setter Property="BorderThickness" Value="0" />
+
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style BasedOn="{StaticResource ListBoxItemBaseStyle.Small}"
+                       TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Background" Value="{x:Null}" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{x:Null}" />
+                            <Setter Property="Foreground" Value="{x:Null}" />
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{x:Null}" />
+                            <Setter Property="Foreground" Value="{x:Null}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="{x:Type m:IPageFindableInfo}">
+                    <c:FindableTextBox CccfFieldType="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                       DataContext="{Binding}"
+                                       FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                       Style="{StaticResource CccfTextBoxStyle}"
+                                       Text="{Binding Text, Mode=OneTime}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="b:IgnoreMouseWheelBehavior.IsEnabled" Value="True" />
+    </Style>
+
+    <DataTemplate x:Key="CccfColumn1Template"
+                  DataType="{x:Type resp:Cccf}">
+        <hc:UniformSpacingPanel VerticalAlignment="Top"
+                                hc:TitleElement.TitleWidth="Auto"
+                                Orientation="Vertical"
+                                Spacing="12">
+            <c:FindableTextBox hc:TitleElement.Title="产品类别:"
+                               CccfFieldType="ProductName"
+                               DataContext="{Binding FindableObject.ProductCategory}"
+                               Style="{StaticResource CccfTextBoxStyle}"
+                               Text="{Binding Text, Mode=OneTime}" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <c:FindableTextBox hc:TitleElement.Title="产品名称:"
+                                   CccfFieldType="ProductName"
+                                   DataContext="{Binding FindableObject.ProductName}"
+                                   Style="{StaticResource CccfTextBoxStyle}"
+                                   Text="{Binding Text, Mode=OneTime}" />
+
+                <TextBlock Grid.Column="1"
+                           Margin="4,0,0,0"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource PrimaryBrush}"
+                           ToolTip="{Binding ProductNameHyperlink}">
+                    <c:ExternalBrowserHyperlink NavigateUri="{Binding ProductNameHyperlink}">🔗</c:ExternalBrowserHyperlink>
+                </TextBlock>
+            </Grid>
+
+            <hc:SimpleText Margin="0,8,0,0"
+                           Foreground="{DynamicResource PrimaryTextBrush}"
+                           Text="产品型号:" />
+
+            <ListBox Margin="50,-36,0,0"
+                     d:ItemsSource="{d:SampleData ItemCount=3}"
+                     ItemsSource="{Binding FindableObject.Models}"
+                     Style="{StaticResource CccfSimpleListBoxStyle}"
+                     Tag="{x:Static m:CccfFieldType.Model}" />
+
+            <c:FindableTextBox hc:TitleElement.Title="企业名称:"
+                               CccfFieldType="EnterpriseName"
+                               DataContext="{Binding FindableObject.EnterpriseName}"
+                               Style="{StaticResource CccfTextBoxStyle}"
+                               Text="{Binding Text, Mode=OneTime}" />
+        </hc:UniformSpacingPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CccfColumn2Template"
+                  DataType="{x:Type resp:Cccf}">
+        <hc:UniformSpacingPanel VerticalAlignment="Top"
+                                hc:TitleElement.TitleWidth="Auto"
+                                Orientation="Vertical"
+                                Spacing="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <c:FindableTextBox Margin="0,6,0,0"
+                                   hc:IconElement.Geometry="{StaticResource CalendarGeometry}"
+                                   hc:TitleElement.Title="证书编号:"
+                                   hc:TitleElement.TitlePlacement="Top"
+                                   CccfFieldType="CertificateNo"
+                                   DataContext="{Binding FindableObject.CertificateNumber}"
+                                   Style="{StaticResource CccfTextBoxStyle}"
+                                   Text="{Binding Text, Mode=OneTime}" />
+
+                <TextBlock Grid.Column="1"
+                           Margin="4,0,0,8"
+                           VerticalAlignment="Bottom"
+                           Foreground="{DynamicResource PrimaryBrush}"
+                           ToolTip="{Binding CertificateNumberHyperlink}">
+                    <c:ExternalBrowserHyperlink NavigateUri="{Binding CertificateNumberHyperlink}">🔗</c:ExternalBrowserHyperlink>
+                </TextBlock>
+            </Grid>
+
+            <hc:SimpleText Margin="5,0,0,0"
+                           Foreground="{DynamicResource PrimaryTextBrush}"
+                           Text="检验报告:" />
+
+            <ListBox Margin="-8,-14,0,0"
+                     d:ItemsSource="{d:SampleData ItemCount=1}"
+                     ItemsSource="{Binding FindableObject.ReportNumbers}"
+                     Style="{StaticResource CccfSimpleListBoxStyle}"
+                     Tag="{x:Static m:CccfFieldType.ReportNo}" />
+        </hc:UniformSpacingPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CccfColumn3Template"
+                  DataType="{x:Type resp:Cccf}">
+        <hc:SimpleStackPanel>
+            <c:FindableTextBox HorizontalAlignment="Center"
+                               HorizontalContentAlignment="Center"
+                               CccfFieldType="CertDateStart"
+                               DataContext="{Binding FindableObject.CertificateIssuedDate}"
+                               Style="{StaticResource CccfTextBoxStyle}"
+                               Text="{Binding Text, Mode=OneTime}"
+                               TextWrapping="Wrap" />
+
+            <hc:SimpleText Margin="0,4"
+                           HorizontalAlignment="Center"
+                           Text="~" />
+
+            <c:FindableTextBox HorizontalAlignment="Center"
+                               HorizontalContentAlignment="Center"
+                               CccfFieldType="CertDateEnd"
+                               DataContext="{Binding FindableObject.CertificateExpirationDate}"
+                               Style="{StaticResource CccfTextBoxStyle}"
+                               Text="{Binding Text, Mode=OneTime}"
+                               TextWrapping="Wrap" />
+        </hc:SimpleStackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CccfColumn4Template"
+                  DataType="{x:Type resp:Cccf}">
+        <c:FindableTextBox HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalContentAlignment="Center"
+                           CccfFieldType="Status"
+                           DataContext="{Binding FindableObject.Status}"
+                           FontWeight="Bold"
+                           Text="{Binding Text, Mode=OneTime}"
+                           TextWrapping="Wrap">
+            <c:FindableTextBox.Style>
+                <Style BasedOn="{StaticResource CccfTextBoxStyle}"
+                       TargetType="{x:Type c:FindableTextBox}">
+                    <Setter Property="Foreground" Value="{DynamicResource ReverseTextBrush}" />
+
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="有效">
+                            <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="Text" Value="暂停">
+                            <Setter Property="Foreground" Value="{StaticResource MyWarningBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="Text" Value="注销">
+                            <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="Text" Value="撤销">
+                            <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </c:FindableTextBox.Style>
+        </c:FindableTextBox>
+    </DataTemplate>
+
+</ResourceDictionary>

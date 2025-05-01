@@ -1,0 +1,481 @@
+﻿<UserControl x:Class="Firefly.Views.MenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:Firefly.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:drawing="clr-namespace:System.Drawing;assembly=System.Drawing"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:m="clr-namespace:Firefly.Models"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prop="clr-namespace:Firefly.Properties"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:MenuViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignWidth="500"
+             hc:WindowAttach.IsDragElement="True"
+             Background="{x:Null}"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <conv:EnumEqualsConverter x:Key="EnumEqualsConverter" />
+        <conv:PrintableFontFamilyConverter x:Key="PrintableFontFamilyConverter" />
+        <conv:StringToBoolConverter x:Key="StringToBoolConverter" />
+        <conv:StringToBoolConverter x:Key="InvertStringToBoolConverter"
+                                    Invert="True" />
+
+        <Style x:Key="HeaderMenuItemStyle"
+               BasedOn="{StaticResource MenuItemBaseStyle}"
+               TargetType="{x:Type MenuItem}">
+            <Setter Property="IsEnabled" Value="False" />
+            <Setter Property="ToolTipService.ShowOnDisabled" Value="True" />
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="UIElement.Opacity" Value="0.8" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="HeaderSimpleTextStyle"
+               TargetType="{x:Type hc:SimpleText}">
+            <Setter Property="Foreground" Value="{DynamicResource MyPrimaryBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="32,0,0,0" />
+        </Style>
+
+        <Style x:Key="CheckableMenuItemStyle"
+               BasedOn="{StaticResource MenuItemBaseStyle}"
+               TargetType="{x:Type MenuItem}">
+            <Setter Property="Icon" Value="{StaticResource CheckBoxIcon}" />
+            <Setter Property="IsCheckable" Value="True" />
+            <Setter Property="StaysOpenOnClick" Value="True" />
+        </Style>
+    </UserControl.Resources>
+
+    <Menu Background="{x:Null}">
+        <MenuItem Header="文件(_F)">
+            <MenuItem Command="{Binding OpenDocumentCommand}"
+                      Header="打开 产品清单.docx(_A)"
+                      ToolTip="{Binding FireflyViewModel.InputFilePath}" />
+
+            <MenuItem Command="{Binding OpenFFDocumentCommand}"
+                      Header="{Binding OpenFFDocumentHeader}"
+                      ToolTip="{Binding FireflyViewModel.OutputFilePath}" />
+
+            <MenuItem Command="{Binding OpenDocumentFolderCommand}"
+                      Header="打开文档所在的位置(_O)"
+                      ToolTip="{Binding FireflyViewModel.DocumentFolder}" />
+        </MenuItem>
+
+        <MenuItem Header="编辑(_E)">
+            <MenuItem Header="自定义字体(_F)"
+                      IsChecked="{Binding Path=UseCustomFont, Source={x:Static prop:Settings.Default}}"
+                      Style="{StaticResource CheckableMenuItemStyle}"
+                      ToolTip="自定义程序写入文档时使用的字体" />
+
+            <MenuItem IsEnabled="{Binding Path=UseCustomFont, Source={x:Static prop:Settings.Default}}"
+                      StaysOpenOnClick="True">
+                <MenuItem.Header>
+                    <hc:ComboBox Margin="0,0,-100,0"
+                                 HorizontalContentAlignment="Center"
+                                 hc:TitleElement.Title="系列"
+                                 hc:TitleElement.TitlePlacement="Left"
+                                 ItemsSource="{Binding Source={x:Static vm:MenuViewModel.InstalledFontCollection}}"
+                                 SelectedValue="{Binding Path=FontFamily, Source={x:Static prop:Settings.Default}, FallbackValue='宋体'}"
+                                 SelectedValuePath="Name">
+                        <hc:ComboBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type drawing:FontFamily}">
+                                <TextBlock FontFamily="{Binding Name}"
+                                           Text="{Binding Name}" />
+                            </DataTemplate>
+                        </hc:ComboBox.ItemTemplate>
+                    </hc:ComboBox>
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem IsEnabled="{Binding Path=UseCustomFont, Source={x:Static prop:Settings.Default}}"
+                      StaysOpenOnClick="True">
+                <MenuItem.Header>
+                    <hc:ComboBox Margin="0,0,-100,0"
+                                 HorizontalContentAlignment="Center"
+                                 hc:TitleElement.Title="大小"
+                                 hc:TitleElement.TitlePlacement="Left"
+                                 DisplayMemberPath="Name"
+                                 ItemsSource="{Binding Source={x:Static m:FontSizeItem.FontSizes}}"
+                                 SelectedValue="{Binding Path=FontSize, Source={x:Static prop:Settings.Default}, FallbackValue=9}"
+                                 SelectedValuePath="Size" />
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Command="{Binding MainViewModel.ManualQueryCccfCommand}"
+                      Header="查询"
+                      Icon="{StaticResource SearchIcon}"
+                      InputGestureText="Ctrl+F"
+                      ToolTip="你可以对选中的部分内容进行查询" />
+
+            <Separator />
+
+            <MenuItem Command="{Binding MainViewModel.FindInPageCommand}"
+                      Header="在页面上查找"
+                      Icon="{StaticResource FindInPageIcon}"
+                      InputGestureText="Ctrl+Shift+F"
+                      ToolTip="你可以对选中的部分内容进行查找" />
+        </MenuItem>
+
+        <MenuItem Header="视图(_V)"
+                  Icon="{x:Null}"
+                  IsCheckable="False"
+                  IsEnabled="True">
+            <MenuItem.Resources>
+                <Style BasedOn="{StaticResource CheckableMenuItemStyle}"
+                       TargetType="{x:Type MenuItem}">
+                    <Setter Property="IsEnabled" Value="{Binding MainViewModel.ActiveView, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static m:ActiveView.Firefly}}" />
+                </Style>
+
+                <Style x:Key="MenuItemBaseStyle"
+                       BasedOn="{StaticResource MenuItemBaseStyle}"
+                       TargetType="{x:Type MenuItem}">
+                    <Setter Property="IsEnabled" Value="{Binding MainViewModel.ActiveView, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static m:ActiveView.Firefly}}" />
+                </Style>
+            </MenuItem.Resources>
+
+            <MenuItem Header="仅查看问题项(_Q)"
+                      InputGestureText="{Binding FireflyViewModel.FireTableService.ErrorItemsCount}"
+                      IsChecked="{Binding FireflyViewModel.ViewErrorOnly}"
+                      StaysOpenOnClick="False" />
+
+            <Separator />
+
+            <MenuItem Command="{Binding ToggleFireTableGroupStateCommand}"
+                      CommandParameter="{StaticResource True}"
+                      Header="展开分组(_E)"
+                      Style="{StaticResource MenuItemBaseStyle}" />
+
+            <MenuItem Command="{Binding ToggleFireTableGroupStateCommand}"
+                      CommandParameter="{StaticResource False}"
+                      Header="收起分组(_C)"
+                      Style="{StaticResource MenuItemBaseStyle}" />
+
+            <MenuItem Command="{Binding ResetFireTableAutoColumnWidthsCommand}"
+                      Header="自动调整列宽(_W)"
+                      Style="{StaticResource MenuItemBaseStyle}" />
+
+            <Separator />
+
+            <MenuItem Header="序号"
+                      IsChecked="True"
+                      IsEnabled="False" />
+
+            <MenuItem Header="首列"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.C1}" />
+
+            <MenuItem Header="数量"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.Count}" />
+
+            <MenuItem Header="产品名称(CCCF)"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.Cccf}" />
+
+            <MenuItem Header="设备名称"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.ProductName}" />
+
+            <MenuItem Header="产品型号"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.Model}" />
+
+            <MenuItem Header="生产厂家"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.EnterpriseName}" />
+
+            <MenuItem Header="证书编号"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.CertificateNumber}" />
+
+            <MenuItem Header="检验报告"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.ReportNumber}" />
+
+            <MenuItem Header="合格证"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.Status}" />
+
+            <MenuItem Header="出厂日期"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.ManufactureDate}" />
+
+            <MenuItem Header="备注"
+                      IsChecked="{Binding FireflyViewModel.FireTableColumnVisibility.Remark}" />
+        </MenuItem>
+
+        <MenuItem Header="检查(_A)"
+                  Style="{StaticResource MenuItemBaseStyle}">
+            <MenuItem.Resources>
+                <Style BasedOn="{StaticResource CheckableMenuItemStyle}"
+                       TargetType="{x:Type MenuItem}">
+                    <Setter Property="IsChecked" Value="True" />
+                    <Setter Property="IsEnabled" Value="False" />
+                    <Setter Property="ToolTipService.ShowOnDisabled" Value="True" />
+                </Style>
+            </MenuItem.Resources>
+
+            <MenuItem Header="严格模式(_S)"
+                      IsChecked="{Binding FireflyViewModel.FireCheckSettings.StrictMode}"
+                      IsEnabled="{Binding FireflyViewModel.IsIdle}"
+                      StaysOpenOnClick="False"
+                      ToolTip="启用: 使用原始内容进行精确匹配 (推荐)&#x0A;禁用: 使用格式化后的内容进行匹配，行为上更符合人类视觉判断，但可能导致正确匹配的内容在 CCCF 上查询失败&#x0A;&#x0A;* 无论启用/禁用严格模式，程序都将区分大小写" />
+
+            <Separator />
+
+            <MenuItem Style="{StaticResource HeaderMenuItemStyle}"
+                      ToolTip="允许或屏蔽产品清单中的内容">
+                <MenuItem.Header>
+                    <hc:SimpleText Style="{StaticResource HeaderSimpleTextStyle}"
+                                   Text="检查列表" />
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Header="* 产品型号"
+                      ToolTip="必选" />
+
+            <MenuItem Header="* 生产厂家"
+                      ToolTip="必选" />
+
+            <MenuItem Header="* 证书编号"
+                      ToolTip="必选" />
+
+            <MenuItem Header="检验报告"
+                      IsChecked="{Binding FireflyViewModel.FireCheckSettings.CheckReportNumber}"
+                      IsEnabled="{Binding FireflyViewModel.IsIdle}"
+                      ToolTip="产品清单不一定需要填写检验报告&#x0A;&#x0A;* 即使屏蔽检验报告，程序仍会对已填写的检验报告进行检查"
+                      ToolTipService.ShowOnDisabled="True" />
+
+            <MenuItem Header="出厂日期"
+                      IsChecked="{Binding FireflyViewModel.FireCheckSettings.CheckManufactureDate}"
+                      IsEnabled="{Binding FireflyViewModel.IsIdle}"
+                      ToolTip="检查出厂日期是否在证书有效期内&#x0A;&#x0A;* 即使屏蔽出厂日期，程序仍会对已填写的日期进行格式检查"
+                      ToolTipService.ShowOnDisabled="True" />
+        </MenuItem>
+
+        <MenuItem Header="表列映射(_M)">
+            <MenuItem Command="{Binding ShowFireTableColumnMappingWindowCommand}"
+                      Header="创建新映射(_N)..."
+                      IsEnabled="{Binding FireflyViewModel.IsIdle}" />
+
+            <MenuItem Command="{Binding OpenFireTableColumnMappingFolderCommand}"
+                      Header="打开映射文件夹(_O)..."
+                      ToolTip="映射文件存储在 \mappings 文件夹中" />
+
+            <Separator />
+
+            <MenuItem Command="{Binding LoadFireTableColumnMappingCommand}"
+                      Header="加载(_L)..."
+                      IsEnabled="{Binding FireflyViewModel.IsIdle}" />
+
+            <Separator />
+
+            <MenuItem Header="预设(_P)"
+                      IsChecked="{Binding FireflyViewModel.IsCustomColumnMappingLoaded, Mode=OneWay, Converter={StaticResource Boolean2BooleanReConverter}}"
+                      IsEnabled="{Binding FireflyViewModel.IsIdle}"
+                      ToolTipService.ShowOnDisabled="True">
+                <MenuItem.ToolTip>
+                    <hc:SimpleText Text="{Binding FireflyViewModel.PresetColumnMapping}"
+                                   TextWrapping="Wrap" />
+                </MenuItem.ToolTip>
+
+                <MenuItem Width="120"
+                          Command="{Binding FireflyViewModel.SetPresetColumnMappingAsDefaultCommand}"
+                          Header="设为默认(_D)"
+                          IsCheckable="True"
+                          IsChecked="{Binding Path=DefaultColumnMappingPath, Source={x:Static prop:Settings.Default}, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}}"
+                          IsEnabled="{Binding Path=DefaultColumnMappingPath, Source={x:Static prop:Settings.Default}, Mode=OneWay, Converter={StaticResource StringToBoolConverter}}"
+                          StaysOpenOnClick="True">
+                    <MenuItem.ToolTip>
+                        <ToolTip Content="{Binding Path=DefaultColumnMappingPath, Source={x:Static prop:Settings.Default}, Converter={StaticResource RelativePathConverter}}"
+                                 ContentStringFormat="当前默认表列映射: {0}" />
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <MenuItem Width="120"
+                          Command="{Binding LoadPresetFireTableColumnMappingCommand}"
+                          Header="应用(_A)"
+                          IsEnabled="{Binding FireflyViewModel.IsCustomColumnMappingLoaded}" />
+
+                <MenuItem Width="120"
+                          Command="{Binding EditPresetFireTableColumnMappingCommand}"
+                          Header="编辑(_E)..." />
+            </MenuItem>
+
+            <MenuItem Header="自定义(_C)"
+                      IsChecked="{Binding FireflyViewModel.IsCustomColumnMappingLoaded, Mode=OneWay}"
+                      IsEnabled="{Binding FireflyViewModel.IsIdle}"
+                      Visibility="{Binding FireflyViewModel.IsCustomColumnMappingLoaded, Converter={StaticResource Boolean2VisibilityConverter}}">
+                <MenuItem.ToolTip>
+                    <hc:SimpleText TextWrapping="Wrap">
+                        <hc:SimpleText.Text>
+                            <MultiBinding StringFormat="已加载: {0}&#x0A;{1}">
+                                <Binding Converter="{StaticResource RelativePathConverter}"
+                                         Path="FireflyViewModel.CustomColumnMappingFilePath" />
+                                <Binding Path="FireflyViewModel.ColumnMapping" />
+                            </MultiBinding>
+                        </hc:SimpleText.Text>
+                    </hc:SimpleText>
+                </MenuItem.ToolTip>
+
+                <MenuItem Width="120"
+                          Command="{Binding FireflyViewModel.SetCustomColumnMappingAsDefaultCommand}"
+                          Header="设为默认(_D)"
+                          IsCheckable="True"
+                          IsChecked="{Binding FireflyViewModel.IsLoadedCustomColumnMappingAsDefault, Mode=OneWay}"
+                          StaysOpenOnClick="True" />
+
+                <MenuItem Width="120"
+                          Command="{Binding EditCustomFireTableColumnMappingCommand}"
+                          Header="编辑(_E)..." />
+            </MenuItem>
+        </MenuItem>
+
+        <MenuItem Header="网站(_W)">
+            <MenuItem Header="CCCF(_C)"
+                      ToolTip="{Binding CccfQueryUrl, Mode=OneTime}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:LaunchUriOrFileAction Path="{Binding CccfQueryUrl}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </MenuItem>
+        </MenuItem>
+
+        <MenuItem Header="数据库(_L)">
+            <MenuItem Command="{Binding ShowCccfScraperWindowCommand}"
+                      Header="同步本地数据库(_S)..."
+                      IsEnabled="{Binding IsLocalModeAllowed}"
+                      ToolTip="{Binding ShowCccfScraperWindowToolTip}"
+                      ToolTipService.ShowOnDisabled="True" />
+
+            <MenuItem Command="{Binding ShowCccfDbMergeWindowCommand}"
+                      Header="合并本地数据库(_M)..."
+                      IsEnabled="{Binding IsLocalModeAllowed}"
+                      ToolTip="{Binding ShowCccfDbMergeWindowToolTip}"
+                      ToolTipService.ShowOnDisabled="True" />
+        </MenuItem>
+
+        <MenuItem Header="帮助(_H)">
+            <MenuItem Header="键盘快捷方式参考(_K)"
+                      IsHitTestVisible="True">
+                <MenuItem.Resources>
+                    <Style BasedOn="{StaticResource MenuItemBaseStyle}"
+                           TargetType="{x:Type MenuItem}">
+                        <Setter Property="IsHitTestVisible" Value="False" />
+                        <Setter Property="StaysOpenOnClick" Value="True" />
+                    </Style>
+                </MenuItem.Resources>
+
+                <MenuItem Header="自动查询视图"
+                          InputGestureText="F1" />
+
+                <MenuItem Header="CCCF 视图"
+                          InputGestureText="F2" />
+
+                <MenuItem Header="在线查询视图"
+                          InputGestureText="Alt+1" />
+
+                <MenuItem Header="本地查询视图"
+                          InputGestureText="Alt+2" />
+
+                <Separator />
+
+                <MenuItem Header="查询"
+                          InputGestureText="Ctrl+F" />
+
+                <MenuItem Header="上一页"
+                          InputGestureText="Ctrl+←" />
+
+                <MenuItem Header="下一页"
+                          InputGestureText="Ctrl+→" />
+
+                <MenuItem Header="首页"
+                          InputGestureText="Ctrl+Shift+←" />
+
+                <MenuItem Header="末页"
+                          InputGestureText="Ctrl+Shift+→" />
+
+                <MenuItem Header="刷新"
+                          InputGestureText="F5" />
+
+                <MenuItem Header="后退"
+                          InputGestureText="Alt+←" />
+
+                <MenuItem Header="前进"
+                          InputGestureText="Alt+→" />
+
+                <Separator />
+
+                <MenuItem Header="在页面上查找"
+                          InputGestureText="Ctrl+Shift+F" />
+
+                <MenuItem Header="上一个结果"
+                          InputGestureText="F3" />
+
+                <MenuItem Header="下一个结果"
+                          InputGestureText="Shift+F3" />
+
+                <Separator />
+
+                <MenuItem Command="{Binding ActivateKeyboardShortcutsCommand}"
+                          Header="激活快捷键"
+                          InputGestureText="连续按 2 次 Esc"
+                          IsHitTestVisible="True"
+                          ToolTip="当焦点位于输入框等位置时，部分快捷键可能暂时失效，可通过连续按 2 次 Esc 键重新激活">
+                    <MenuItem.Icon>
+                        <Path Data="{StaticResource InfoGeometry}"
+                              Fill="{DynamicResource PrimaryBrush}"
+                              Stroke="{DynamicResource PrimaryBrush}"
+                              StrokeThickness="1"
+                              Style="{StaticResource IconParkStyle}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <Separator />
+
+            <MenuItem Command="{Binding OpenRelativeFolderCommand}"
+                      CommandParameter=""
+                      Header="打开程序根目录(_R)..." />
+
+            <MenuItem Command="{Binding OpenRelativeFolderCommand}"
+                      CommandParameter="logs"
+                      Header="打开日志目录(_L)..."
+                      ToolTip="\logs&#x0A;查看日志文件，以帮助定位并解决程序中的错误" />
+
+            <MenuItem Command="{Binding OpenLocalApplicationDataCommand}"
+                      Header="打开用户配置文件目录(_C)..."
+                      ToolTip="%LOCALAPPDATA%\Firefly&#x0A;存放所有已使用过版本的用户个性化配置，你可以放心清理它们" />
+
+            <MenuItem Command="{Binding OpenAppSettingsCommand}"
+                      Header="编辑 appsettings.json(_J)..."
+                      ToolTip="\appsettings.json&#x0A;应用程序的所有设置都包含在名为 appsettings.json 的文件中。对 appsettings.json 文件的任何更改都需要重新启动应用程序才能生效&#x0A;&#x0A;警告: 请勿修改，除非你确定知道这些配置的功能" />
+
+            <Separator />
+
+            <MenuItem Command="{Binding VersionInfoViewModel.CheckUpdateCommand}"
+                      CommandParameter="{StaticResource True}"
+                      Header="检查更新(_U)">
+                <MenuItem.ToolTip>
+                    <ToolTip Content="{Binding Path=LastCheckedTime, Source={x:Static prop:Settings.Default}}"
+                             ContentStringFormat="上次检查时间: {0:yyyy/MM/dd dddd tt h:mm}"
+                             Language="zh-CN" />
+                </MenuItem.ToolTip>
+            </MenuItem>
+
+            <MenuItem Header="发行说明(_N)">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:LaunchUriOrFileAction Path="{x:Static m:GitHubConstants.LatestReleaseUrl}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </MenuItem>
+
+            <Separator />
+
+            <MenuItem Command="{Binding MainViewModel.DisclaimerCommand}"
+                      Header="免责声明(_D)" />
+
+            <MenuItem Command="{Binding AboutCommand}"
+                      Header="关于 Firefly (萤火虫)(_A)" />
+        </MenuItem>
+    </Menu>
+</UserControl>

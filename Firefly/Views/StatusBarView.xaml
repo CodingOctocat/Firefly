@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="Firefly.Views.StatusBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Firefly.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:Firefly.Views"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:StatusBarViewModel,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="24"
+             d:FontSize="10"
+             mc:Ignorable="d">
+    <StatusBar HorizontalContentAlignment="Stretch"
+               VerticalContentAlignment="Stretch"
+               hc:WindowAttach.IsDragElement="True">
+        <StatusBar.Resources>
+            <Style BasedOn="{StaticResource StatusBarItemBaseStyle}"
+                   TargetType="{x:Type StatusBarItem}">
+                <Setter Property="Padding" Value="10,0" />
+            </Style>
+
+            <Style BasedOn="{StaticResource TextBlockDefault}"
+                   TargetType="{x:Type TextBlock}" />
+        </StatusBar.Resources>
+
+        <StatusBar.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </ItemsPanelTemplate>
+        </StatusBar.ItemsPanel>
+
+        <ScrollViewer hc:ScrollViewerAttach.Orientation="Horizontal"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Disabled">
+            <TextBlock Foreground="{DynamicResource SecondaryTextBrush}">
+                <Run Text="Powered by" />
+                <c:ExternalBrowserHyperlink NavigateUri="https://docs.microsoft.com/dotnet/csharp/"
+                                            ToolTip="C#（发音为 /C sharp/）是一种简单、现代、面向对象、类型安全的编程语言">
+                    C#
+                </c:ExternalBrowserHyperlink><Run Text="/" /><c:ExternalBrowserHyperlink NavigateUri="https://docs.microsoft.com/zh-cn/dotnet/"
+                                            ToolTip=".NET 是一个免费的跨平台开放源代码开发人员平台，用于生成多种类型的应用程序">
+                    .NET
+                </c:ExternalBrowserHyperlink><Run Text=", Proudly Built by" />
+                <c:ExternalBrowserHyperlink NavigateUri="https://docs.microsoft.com/zh-cn/dotnet/desktop/wpf/"
+                                            ToolTip="Windows Presentation Foundation（WPF）是一个 UI 框架，用于在 .NET 平台上构建具有视觉吸引力的 Windows 桌面应用程序">
+                    WPF
+                </c:ExternalBrowserHyperlink><Run Text=", Created by" />
+                <c:ExternalBrowserHyperlink NavigateUri="mailto:CodingNinja@outlook.com?subject=[Firefly 反馈] &amp;body=告诉我有关你的任何意见或建议！"
+                                            ToolTip="📧联系开发者 &lt;CodingNinja@outlook.com&gt;">
+                    CodingNinja
+                </c:ExternalBrowserHyperlink><Run Text=", Released on" />
+                <Run Language="zh-CN"
+                     Text="{Binding ReleasedTime, Mode=OneTime, StringFormat={}{0:yyyy/MM/dd dddd}}"
+                     ToolTip="{Binding ReleasedLongTime, Mode=OneTime}" />
+            </TextBlock>
+        </ScrollViewer>
+
+        <Separator Grid.Column="1" />
+
+        <StatusBarItem Grid.Column="2">
+            <v:ThemeSwitchButtonView />
+        </StatusBarItem>
+
+        <Separator Grid.Column="3" />
+
+        <StatusBarItem Grid.Column="4">
+            <v:VersionInfoView />
+        </StatusBarItem>
+    </StatusBar>
+</UserControl>

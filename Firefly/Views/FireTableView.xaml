@@ -1,0 +1,322 @@
+﻿<UserControl x:Class="Firefly.Views.FireTableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="clr-namespace:Firefly.Behaviors"
+             xmlns:comm="clr-namespace:Firefly.Common"
+             xmlns:conv="clr-namespace:Firefly.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:FireflyViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <comm:BindingProxy x:Key="DataContextProxy"
+                           Data="{Binding}" />
+
+        <conv:NewLineToSymbolConverter x:Key="NewLineConverter" />
+
+        <!--  FIXBUG: https://github.com/HandyOrg/HandyControl/issues/227#issuecomment-2670154146  -->
+        <Style BasedOn="{StaticResource DataGridBaseStyle}"
+               TargetType="DataGrid" />
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--
+            请勿启用 EnableColumnVirtualization，否则将无法调整列宽（除非 ColumnWidth 为 *）
+            请勿设置 VirtualizationMode="Recycling"，否则可能引发大量绑定错误
+        -->
+        <DataGrid x:Name="dgFirefly"
+                  b:ScrollViewerHelper.ShiftWheelScrollSpeed="4"
+                  b:ScrollViewerHelper.ShiftWheelScrollsHorizontally="True"
+                  d:ItemsSource="{d:SampleData ItemCount=5}"
+                  hc:Empty.ShowEmpty="{Binding LoadDocumentCommand.IsRunning, Converter={StaticResource Boolean2BooleanReConverter}}"
+                  hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorY200}"
+                  AllowDrop="True"
+                  AreRowDetailsFrozen="True"
+                  AutoGenerateColumns="False"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserResizeRows="False"
+                  CanUserSortColumns="False"
+                  CellStyle="{StaticResource FireTableCellStyle}"
+                  ColumnReordered="DgFirefly_ColumnReordered"
+                  ContextMenuClosing="DgFirefly_ContextMenuClosing"
+                  EnableColumnVirtualization="False"
+                  EnableRowVirtualization="True"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding FireCheckContextsView}"
+                  PreviewMouseRightButtonDown="DgFirefly_PreviewMouseRightButtonDown"
+                  RowDetailsTemplate="{StaticResource FireTableRowDetailsTemplate}"
+                  RowHeight="28"
+                  ScrollViewer.CanContentScroll="True"
+                  ScrollViewer.ScrollChanged="DgFirefly_ScrollChanged"
+                  SelectedItem="{Binding SelectedFireCheckContext}"
+                  SelectionChanged="DgFirefly_SelectionChanged"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  VirtualizingPanel.CacheLengthUnit="Item"
+                  VirtualizingPanel.IsVirtualizing="True"
+                  VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                  VirtualizingPanel.ScrollUnit="Pixel"
+                  VirtualizingPanel.VirtualizationMode="Standard">
+            <DataGrid.Resources>
+                <Style x:Key="FireTableCellWithContextMenuStyle"
+                       BasedOn="{StaticResource FireTableCellStyle}"
+                       TargetType="{x:Type DataGridCell}">
+                    <Setter Property="ContextMenu" Value="{StaticResource FireTableCellContextMenu}" />
+                    <!--
+                        启用 UI 虚拟化情况下，滚动视图会导致短暂的 RelativeSource 绑定失败（不影响实际效果）
+                        设置 FallbackValue 将错误转化为警告，但性能可能较差
+                        如果样式与 DataGrid 在同一文件中，那么可以使用 BindingProxy 解决此问题
+                    -->
+                    <!--<Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue={x:Null}}" />-->
+                    <Setter Property="Tag" Value="{Binding Data, Source={StaticResource DataContextProxy}}" />
+                </Style>
+            </DataGrid.Resources>
+
+            <i:Interaction.Behaviors>
+                <b:DataGridScrollFindableToCenterBehavior Client="{Binding FindInPageBarViewModel}"
+                                                          FindableScopes="{Binding SelectedFireCheckContext.Cccf}" />
+            </i:Interaction.Behaviors>
+
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="32"
+                                        CanUserReorder="False"
+                                        CanUserResize="False"
+                                        CellTemplate="{StaticResource FireTableOrderTemplate}"
+                                        Header="#" />
+
+                <DataGridTextColumn Width="Auto"
+                                    MinWidth="48"
+                                    Binding="{Binding FireProduct.C1.Raw, Converter={StaticResource NewLineConverter}}"
+                                    Header="首列"
+                                    Visibility="{Binding Data.FireTableColumnVisibility.C1, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTextColumn Width="Auto"
+                                    MinWidth="48"
+                                    Binding="{Binding FireProduct.Count.Raw, Converter={StaticResource NewLineConverter}}"
+                                    Header="数量"
+                                    Visibility="{Binding Data.FireTableColumnVisibility.Count, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="55"
+                                        CellStyle="{StaticResource FireTableCellWithContextMenuStyle}"
+                                        CellTemplate="{StaticResource FireTableCccfProductNameTemplate}"
+                                        Header="CCCF"
+                                        Visibility="{Binding Data.FireTableColumnVisibility.Cccf, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="72"
+                                        CellStyle="{StaticResource FireTableCellWithContextMenuStyle}"
+                                        CellTemplate="{StaticResource FireTableProductNameTemplate}"
+                                        Header="设备名称"
+                                        Visibility="{Binding Data.FireTableColumnVisibility.ProductName, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="72"
+                                        CellStyle="{StaticResource FireTableCellWithContextMenuStyle}"
+                                        CellTemplate="{StaticResource FireTableModelTemplate}"
+                                        Header="产品型号"
+                                        Visibility="{Binding Data.FireTableColumnVisibility.Model, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="72"
+                                        CellStyle="{StaticResource FireTableCellWithContextMenuStyle}"
+                                        CellTemplate="{StaticResource FireTableEnterpriseNameTemplate}"
+                                        Header="生产厂家"
+                                        Visibility="{Binding Data.FireTableColumnVisibility.EnterpriseName, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="72"
+                                        CellStyle="{StaticResource FireTableCellWithContextMenuStyle}"
+                                        CellTemplate="{StaticResource FireTableCertificateNumberTemplate}"
+                                        Header="证书编号"
+                                        Visibility="{Binding Data.FireTableColumnVisibility.CertificateNumber, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="72"
+                                        CellStyle="{StaticResource FireTableCellWithContextMenuStyle}"
+                                        CellTemplate="{StaticResource FireTableReportNumberTemplate}"
+                                        Header="检验报告"
+                                        Visibility="{Binding Data.FireTableColumnVisibility.ReportNumber, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTextColumn Width="Auto"
+                                    MinWidth="60"
+                                    Binding="{Binding FireProduct.Status.Raw, Converter={StaticResource NewLineConverter}}"
+                                    Header="合格证"
+                                    Visibility="{Binding Data.FireTableColumnVisibility.Status, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTemplateColumn Width="Auto"
+                                        MinWidth="72"
+                                        CellTemplate="{StaticResource FireTableManufactureDateTemplate}"
+                                        Header="出厂日期"
+                                        Visibility="{Binding Data.FireTableColumnVisibility.ManufactureDate, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <DataGridTextColumn Width="Auto"
+                                    MinWidth="48"
+                                    Binding="{Binding FireProduct.Remark.Raw, Converter={StaticResource NewLineConverter}}"
+                                    Header="备注"
+                                    Visibility="{Binding Data.FireTableColumnVisibility.Remark, Source={StaticResource DataContextProxy}, Converter={StaticResource Boolean2VisibilityConverter}}" />
+            </DataGrid.Columns>
+
+            <DataGrid.GroupStyle>
+                <GroupStyle ContainerStyle="{StaticResource FireTableGroupItemStyle}" />
+            </DataGrid.GroupStyle>
+
+            <DataGrid.RowStyle>
+                <Style BasedOn="{StaticResource FireTableRowStyle}"
+                       TargetType="{x:Type DataGridRow}">
+                    <EventSetter Event="PreviewMouseLeftButtonDown"
+                                 Handler="DgFirefly_Row_PreviewMouseLeftButtonDown" />
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+
+        <hc:GotoTop x:Name="gotoTop"
+                    Target="{Binding ElementName=dgFirefly}"
+                    ToolTip="回到顶部" />
+
+        <Border Background="{DynamicResource DarkMaskBrush}"
+                Visibility="{Binding LoadDocumentCommand.IsRunning, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+        <hc:Empty HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  hc:Empty.ShowEmpty="True"
+                  Background="{DynamicResource DarkMaskBrush}"
+                  Visibility="{Binding LoadDocumentCommand.IsRunning, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <hc:Empty.Logo>
+                <hc:LoadingCircle />
+            </hc:Empty.Logo>
+
+            <hc:Empty.Description>
+                <hc:SimpleText Margin="0,8,0,0"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource PrimaryTextBrush}"
+                               Text="正在读取..." />
+            </hc:Empty.Description>
+        </hc:Empty>
+
+        <Grid Grid.Row="1"
+              Margin="4,4,4,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer b:ScrollViewerHelper.ShiftWheelScrollsHorizontally="True"
+                          HorizontalScrollBarVisibility="Auto">
+                <hc:UniformSpacingPanel VerticalAlignment="Center"
+                                        HorizontalSpacing="8"
+                                        Orientation="Horizontal">
+                    <hc:Shield Subject="表列映射">
+                        <hc:Shield.Style>
+                            <Style BasedOn="{StaticResource ShieldBaseStyle}"
+                                   TargetType="{x:Type hc:Shield}">
+                                <Setter Property="Color" Value="{DynamicResource PrimaryBrush}" />
+
+                                <Setter Property="Status">
+                                    <Setter.Value>
+                                        <TextBlock Text="{Binding ColumnMapping.SkipRowRules.Count, StringFormat='预设(~{0})'}" />
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <hc:SimpleText Text="{Binding ColumnMapping}"
+                                                       TextWrapping="Wrap" />
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCustomColumnMappingLoaded}"
+                                                 Value="{StaticResource True}">
+                                        <Setter Property="Color" Value="{DynamicResource InfoBrush}" />
+
+                                        <Setter Property="Status">
+                                            <Setter.Value>
+                                                <TextBlock Text="{Binding ColumnMapping.SkipRowRules.Count, StringFormat='自定义(~{0})'}" />
+                                            </Setter.Value>
+                                        </Setter>
+
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <hc:SimpleText TextWrapping="Wrap">
+                                                    <hc:SimpleText.Text>
+                                                        <MultiBinding StringFormat="已加载: {0}&#x0A;{1}">
+                                                            <Binding Converter="{StaticResource RelativePathConverter}"
+                                                                     Path="CustomColumnMappingFilePath" />
+                                                            <Binding Path="ColumnMapping" />
+                                                        </MultiBinding>
+                                                    </hc:SimpleText.Text>
+                                                </hc:SimpleText>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding ColumnMapping.HasError}"
+                                                 Value="{StaticResource True}">
+                                        <Setter Property="Color" Value="{DynamicResource DangerBrush}" />
+                                        <Setter Property="Status" Value="自定义(错误)" />
+
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="{Binding CustomColumnMappingFilePath, Converter={StaticResource RelativePathConverter}}"
+                                                         ContentStringFormat="已加载(错误): {0}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </hc:Shield.Style>
+                    </hc:Shield>
+
+                    <Border BorderBrush="{DynamicResource DangerBrush}"
+                            Style="{StaticResource LabelBorderStyle}"
+                            ToolTip="使用格式化后的内容进行匹配，行为上更符合人类视觉，但可能导致正确匹配的内容在 CCCF 上查询失败"
+                            Visibility="{Binding FireCheckSettings.StrictMode, Converter={StaticResource Boolean2VisibilityReConverter}}">
+                        <hc:SimpleText Foreground="{DynamicResource DangerBrush}"
+                                       Text="严格模式: 已禁用" />
+                    </Border>
+
+                    <Border BorderBrush="{DynamicResource MyWarningBrush}"
+                            Style="{StaticResource LabelBorderStyle}"
+                            Visibility="{Binding ViewErrorOnly, Converter={StaticResource Boolean2VisibilityConverter}}">
+                        <hc:SimpleText Foreground="{DynamicResource MyWarningBrush}"
+                                       Text="当前仅显示有问题的项" />
+                    </Border>
+                </hc:UniformSpacingPanel>
+            </ScrollViewer>
+
+            <hc:UniformSpacingPanel Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    ItemHorizontalAlignment="Right"
+                                    Spacing="4">
+                <Button Command="{Binding CancelCommand}"
+                        Content="结束(_P)"
+                        IsEnabled="{Binding StartCommand.CanBeCanceled}" />
+
+                <Button Command="{Binding StartCommand}"
+                        Content="开始任务(_S)"
+                        Style="{DynamicResource ButtonPrimary}" />
+            </hc:UniformSpacingPanel>
+        </Grid>
+    </Grid>
+</UserControl>

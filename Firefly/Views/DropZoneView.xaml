@@ -1,0 +1,119 @@
+﻿<UserControl x:Class="Firefly.Views.DropZoneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:FireflyViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignHeight="650"
+             d:DesignWidth="800"
+             AllowDrop="True"
+             Visibility="{Binding IsDragging, Converter={StaticResource Boolean2VisibilityConverter}}"
+             mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <!--  如果以管理员身份运行 Visual Studio 并调试程序，将阻止拖放操作  -->
+        <i:EventTrigger EventName="DragOver">
+            <i:InvokeCommandAction Command="{Binding DragOverBlockCommand}"
+                                   PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+
+        <i:EventTrigger EventName="Drop">
+            <i:InvokeCommandAction Command="{Binding DropBlockCommand}"
+                                   PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Border Background="Transparent">
+        <hc:DashedBorder MinWidth="160"
+                         MinHeight="160"
+                         Margin="142"
+                         Padding="8"
+                         d:Background="{DynamicResource LightPrimaryBrush}"
+                         BorderDashArray="4, 2"
+                         BorderThickness="4"
+                         CornerRadius="8"
+                         Opacity="0.8">
+            <hc:DashedBorder.Style>
+                <Style TargetType="{x:Type hc:DashedBorder}">
+                    <Setter Property="Background" Value="{DynamicResource LightPrimaryBrush}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsBusy}"
+                                     Value="{StaticResource True}">
+                            <Setter Property="Background" Value="{DynamicResource LightDangerBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </hc:DashedBorder.Style>
+
+            <i:Interaction.Triggers>
+                <!--  如果以管理员身份运行 Visual Studio 并调试程序，将阻止拖放操作  -->
+                <i:EventTrigger EventName="DragOver">
+                    <i:InvokeCommandAction Command="{Binding DragOverCommand}"
+                                           PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+
+                <i:EventTrigger EventName="DragEnter">
+                    <i:InvokeCommandAction Command="{Binding DragEnterCommand}"
+                                           PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+
+                <i:EventTrigger EventName="Drop">
+                    <i:InvokeCommandAction Command="{Binding DropCommand}"
+                                           PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <hc:SimpleStackPanel VerticalAlignment="Center">
+                <Viewbox Width="48"
+                         Height="48"
+                         Margin="24">
+                    <Path>
+                        <Path.Style>
+                            <Style BasedOn="{StaticResource IconParkStyle}"
+                                   TargetType="{x:Type Path}">
+                                <Setter Property="Data" Value="{StaticResource DownloadGeometry}" />
+                                <Setter Property="Fill" Value="{DynamicResource PrimaryBrush}" />
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBusy}"
+                                                 Value="{StaticResource True}">
+                                        <Setter Property="Data" Value="{StaticResource ErrorGeometry}" />
+                                        <Setter Property="Fill" Value="{DynamicResource DangerBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Path.Style>
+                    </Path>
+                </Viewbox>
+
+                <hc:SimpleText Margin="0,0,0,12"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               d:Text="拖放 .docx 文件到此区域..."
+                               FontSize="{StaticResource HeadFontSize}"
+                               TextWrapping="Wrap">
+                    <hc:SimpleText.Style>
+                        <Style BasedOn="{StaticResource MySimpleTextStyle}"
+                               TargetType="{x:Type hc:SimpleText}">
+                            <Setter Property="Text" Value="拖放 .docx 文件到此区域..." />
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsBusy}"
+                                             Value="{StaticResource True}">
+                                    <Setter Property="Text" Value="任务进行中，请稍后重试。" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </hc:SimpleText.Style>
+                </hc:SimpleText>
+            </hc:SimpleStackPanel>
+        </hc:DashedBorder>
+    </Border>
+</UserControl>

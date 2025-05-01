@@ -1,0 +1,7 @@
+国家地区列表=https://github.com/umpirsky/country-list/blob/master/data/zh_CN/country.txt
+中国省市县区列表=https://www.mca.gov.cn/mzsj/xzqh/2023/202301xzqh.html
+
+强制性产品认证信息=https://www.cccf.com.cn:8088/certSearch/page/qzxrzxxgbnew
+技术鉴定产品信息=https://www.cccf.com.cn:8088/certSearch/page/jsjdxxgbnew
+其他消防产品信息=https://www.cccf.com.cn:8088/certSearch/page/qtcp_zyx
+其他消防产品信息(原强制性产品认证证书注销信息)=https://www.cccf.com.cn:8088/certSearch/page/qtcp_qzx

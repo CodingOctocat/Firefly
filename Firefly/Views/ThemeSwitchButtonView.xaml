@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="Firefly.Views.ThemeSwitchButtonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="clr-namespace:Firefly.Behaviors"
+             xmlns:conv="clr-namespace:Firefly.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:h="clr-namespace:Firefly.Helpers"
+             xmlns:hcd="clr-namespace:HandyControl.Data;assembly=HandyControl"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             d:Background="{DynamicResource RegionBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:ThemeSwitchButtonViewModel,
+                                              IsDesignTimeCreatable=True}"
+             mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <UserControl.Resources>
+        <conv:SkinTypeToImageConverter x:Key="SkinTypeToImageConverter" />
+        <conv:SkinTypeToolTipConverter x:Key="SkinTypeToolTipConverter" />
+    </UserControl.Resources>
+
+    <Button x:Name="btnThemeSwitcher"
+            b:ContextMenuLeftClickBehavior.UseLeftClick="True"
+            ContextMenuService.HorizontalOffset="-72"
+            ContextMenuService.IsEnabled="False"
+            ContextMenuService.Placement="Top"
+            Style="{StaticResource ButtonCustom}"
+            ToolTip="{Binding Path=(h:ThemeManager.CurrentSkinTypeMode), Converter={StaticResource SkinTypeToolTipConverter}}">
+        <Button.ContextMenu>
+            <ContextMenu Width="144">
+                <ContextMenu.Resources>
+                    <Style TargetType="{x:Type Image}">
+                        <Setter Property="Height" Value="16" />
+                        <Setter Property="Width" Value="16" />
+                    </Style>
+                </ContextMenu.Resources>
+
+                <MenuItem Command="{Binding ChangeThemeCommand}"
+                          CommandParameter="{x:Static hcd:SkinType.Default}"
+                          Header="浅色">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/sun_3d.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding ChangeThemeCommand}"
+                          CommandParameter="{x:Static hcd:SkinType.Dark}"
+                          Header="深色">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/crescent_moon_3d.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding ChangeThemeCommand}"
+                          CommandParameter="{x:Static hcd:SkinType.Violet}"
+                          Header="紫罗兰">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/purple_circle_3d.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding ChangeThemeCommand}"
+                          CommandParameter="{x:Null}"
+                          Header="使用系统设置">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/artist_palette_3d.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </Button.ContextMenu>
+
+        <Image d:Source="/Resources/artist_palette_3d.png"
+               Source="{Binding Path=(h:ThemeManager.CurrentSkinTypeMode), Converter={StaticResource SkinTypeToImageConverter}}"
+               Style="{StaticResource IconImageStyle}" />
+    </Button>
+</UserControl>

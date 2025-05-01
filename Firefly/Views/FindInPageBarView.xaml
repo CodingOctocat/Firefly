@@ -1,0 +1,188 @@
+﻿<UserControl x:Class="Firefly.Views.FindInPageBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Firefly.ViewModels"
+             Height="38"
+             d:DataContext="{d:DesignInstance Type=vm:FindInPageBarViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignWidth="500"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <DrawingImage x:Key="case_sensitive">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                    <GeometryDrawing Brush="{DynamicResource MyReverseBrush}"
+                                     Geometry="F0 M16,16z M0,0z M7.495,9.052L8.386,11.402 9.477,11.402 6.237,3 5.217,3 2,11.402 3.095,11.402 3.933,9.052 7.495,9.052z M5.811,4.453L5.855,4.588 7.173,8.162 4.255,8.162 5.562,4.588 5.606,4.453 5.644,4.297 5.676,4.145 5.697,4.019 5.72,4.019 5.744,4.145 5.773,4.297 5.811,4.453z M13.795,10.464L13.795,11.4 14.755,11.4 14.755,7.498C14.755,6.779 14.575,6.226 14.216,5.837 13.857,5.448 13.327,5.254 12.628,5.254 12.429,5.254 12.227,5.273 12.022,5.31A4.875,4.875,0,0,0,10.944,5.636A2.081,2.081,0,0,0,10.601,5.824L10.601,6.808C10.867,6.578,11.167,6.397,11.505,6.268A2.927,2.927,0,0,1,12.557,6.075C12.745,6.075,12.915,6.103,13.07,6.16A0.98,0.98,0,0,1,13.466,6.427C13.575,6.548 13.659,6.706 13.718,6.899 13.777,7.092 13.806,7.326 13.806,7.599L11.995,7.851C11.651,7.898,11.355,7.977,11.107,8.088A1.947,1.947,0,0,0,10.492,8.507A1.6,1.6,0,0,0,10.132,9.087A2.134,2.134,0,0,0,10.015,9.808C10.015,10.054 10.057,10.283 10.139,10.496 10.221,10.709 10.342,10.893 10.502,11.047 10.662,11.201 10.862,11.323 11.1,11.413 11.338,11.503 11.613,11.548 11.926,11.548 12.328,11.548 12.686,11.456 13.001,11.27 13.316,11.084 13.573,10.816 13.772,10.464L13.795,10.464z M11.667,8.721C11.843,8.657,12.068,8.607,12.341,8.572L13.806,8.367 13.806,8.976C13.806,9.222,13.765,9.451,13.683,9.664A1.727,1.727,0,0,1,13.34,10.221A1.573,1.573,0,0,1,12.816,10.593A1.63,1.63,0,0,1,12.148,10.728C11.961,10.728,11.795,10.703,11.653,10.652A1.03,1.03,0,0,1,11.296,10.441A0.896,0.896,0,0,1,11.076,10.125A1.005,1.005,0,0,1,11,9.732A1.6,1.6,0,0,1,11.055,9.292A0.739,0.739,0,0,1,11.257,8.958A1.16,1.16,0,0,1,11.667,8.721z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <DrawingImage x:Key="whole_word">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                    <GeometryDrawing Brush="{DynamicResource MyReverseBrush}"
+                                     Geometry="F0 M16,16z M0,0z M1,2L15,2 15,3 1,3 1,2z M14,4L13,4 13,12 14,12 14,4z M11.272,8.387A2.353,2.353,0,0,0,10.912,7.601A1.746,1.746,0,0,0,10.303,7.071A1.832,1.832,0,0,0,9.437,6.878C9.239,6.878,9.057,6.902,8.89,6.951A1.76,1.76,0,0,0,8.437,7.156A1.724,1.724,0,0,0,8.072,7.474L7.893,7.732 7.893,4.578 7,4.578 7,12 7.893,12 7.893,11.425 8.019,11.6C8.106,11.702 8.208,11.79 8.323,11.869 8.44,11.947 8.572,12.009 8.721,12.055 8.87,12.101 9.035,12.123 9.219,12.123 9.572,12.123 9.885,12.052 10.156,11.911 10.428,11.768 10.655,11.573 10.838,11.325 11.021,11.075 11.159,10.782 11.252,10.446 11.345,10.108 11.392,9.743 11.392,9.349A3.756,3.756,0,0,0,11.272,8.387z M9.793,7.78C9.944,7.851 10.075,7.956 10.183,8.094 10.292,8.234 10.377,8.407 10.438,8.611 10.489,8.785 10.52,8.982 10.527,9.198L10.52,9.323C10.52,9.65,10.487,9.943,10.42,10.192A1.886,1.886,0,0,1,10.142,10.806C10.025,10.968 9.882,11.091 9.721,11.172 9.399,11.334 8.961,11.338 8.652,11.187A1.264,1.264,0,0,1,8.259,10.891A1.273,1.273,0,0,1,8.041,10.524C8.041,10.524 7.862,10.077 7.862,9.577 7.862,9.077 8.041,8.575 8.041,8.575 8.103,8.398 8.177,8.257 8.265,8.145 8.379,8.002 8.521,7.886 8.689,7.8 8.857,7.714 9.054,7.671 9.276,7.671 9.466,7.671 9.64,7.708 9.793,7.78z M15,13L1,13 1,14 15,14 15,13z M2.813,10L2.085,12.031 1,12.031 1.025,11.959 3.466,4.873 4.407,4.873 6.892,12.031 5.81,12.031 5.032,10 2.813,10z M3.934,6.422L3.912,6.422 3.007,9.175 4.848,9.175 3.934,6.422z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <DrawingImage x:Key="regex">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                    <GeometryDrawing Brush="{DynamicResource MyReverseBrush}"
+                                     Geometry="F0 M16,16z M0,0z M10.012,2L10.988,2 10.988,5.113 13.548,3.556 14.034,4.441 11.47,6 14.034,7.559 13.549,8.444 10.988,6.887 10.988,10 10.012,10 10.012,6.887 7.452,8.444 6.966,7.559 9.53,6 6.966,4.441 7.451,3.556 10.012,5.113 10.012,2z M2,10L6,10 6,14 2,14 2,10z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <Style BasedOn="{StaticResource ToggleButtonDefault}"
+               TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Height" Value="26" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="26" />
+
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="BorderThickness" Value="2" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Padding="9,4,4,4"
+            hc:BorderElement.Circular="True"
+            Background="{DynamicResource BorderBrush}"
+            BorderBrush="{DynamicResource LightPrimaryBrush}"
+            BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <hc:TextBox x:Name="tbFindInPage"
+                        Height="28"
+                        Padding="12,0"
+                        hc:BorderElement.CornerRadius="14"
+                        hc:InfoElement.Placeholder="{Binding Path=(hc:InfoElement.Placeholder), RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        hc:InfoElement.ShowClearButton="True"
+                        hc:TitleElement.Title="在页面上查找"
+                        hc:TitleElement.TitlePlacement="Left"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource MyPrimarySolidBrush}"
+                        Style="{StaticResource TextBoxPlusBaseStyle}"
+                        Text="{Binding FindText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <hc:LoadingCircle x:Name="finding"
+                              Width="24"
+                              Height="24"
+                              Margin="3,0"
+                              HorizontalAlignment="Right"
+                              Panel.ZIndex="999"
+                              Visibility="Visible" />
+
+            <hc:UniformSpacingPanel Grid.Column="2"
+                                    Margin="8,0,0,0"
+                                    HorizontalSpacing="4"
+                                    ItemVerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                <hc:NumericUpDown MaxWidth="96"
+                                  Foreground="{DynamicResource PrimaryBrush}"
+                                  IsEnabled="{Binding HasResult}"
+                                  Maximum="{Binding FindCount}"
+                                  Minimum="0"
+                                  Value="{Binding FindIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <hc:SimplePanel>
+                    <hc:SimpleText VerticalAlignment="Center"
+                                   d:Text="/ 42"
+                                   Foreground="{DynamicResource MyPrimaryBrush}"
+                                   Text="{Binding FindCount, NotifyOnTargetUpdated=True, StringFormat='/ {0}'}">
+                        <hc:SimpleText.Triggers>
+                            <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="finding"
+                                                                       Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0"
+                                                                    Value="{x:Static Visibility.Visible}" />
+
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.25"
+                                                                    Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+
+                                        <DoubleAnimation Storyboard.TargetName="finding"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="0"
+                                                         To="1"
+                                                         Duration="0:0:0.125" />
+
+                                        <DoubleAnimation BeginTime="0:0:0.125"
+                                                         Storyboard.TargetName="finding"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="1"
+                                                         To="0"
+                                                         Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </hc:SimpleText.Triggers>
+                    </hc:SimpleText>
+                </hc:SimplePanel>
+
+                <hc:Divider MaxHeight="16"
+                            LineStroke="{DynamicResource SecondaryBorderBrush}"
+                            Orientation="Vertical" />
+
+                <ToggleButton IsChecked="{Binding FindInPageOptions.MatchCase}"
+                              IsEnabled="{Binding HasResult}"
+                              ToolTip="区分大小写">
+                    <Image Source="{StaticResource case_sensitive}"
+                           Style="{StaticResource IconImageStyle.Tiny}" />
+                </ToggleButton>
+
+                <ToggleButton IsChecked="{Binding FindInPageOptions.MatchWholeWord}"
+                              IsEnabled="{Binding HasResult}"
+                              ToolTip="全字匹配">
+                    <Image Source="{StaticResource whole_word}"
+                           Style="{StaticResource IconImageStyle.Tiny}" />
+                </ToggleButton>
+
+                <ToggleButton IsChecked="{Binding FindInPageOptions.UseRegex}"
+                              IsEnabled="{Binding HasResult}"
+                              ToolTip="正则表达式">
+                    <Image Source="{StaticResource regex}"
+                           Style="{StaticResource IconImageStyle.Tiny}" />
+                </ToggleButton>
+
+                <hc:Divider MaxHeight="16"
+                            LineStroke="{DynamicResource SecondaryBorderBrush}"
+                            Orientation="Vertical" />
+
+                <Button Width="32"
+                        hc:IconElement.Geometry="{StaticResource UpGeometry}"
+                        Command="{Binding GoToPreviousFindResultCommand}"
+                        Style="{StaticResource ButtonIcon}"
+                        ToolTip="上一个结果(Shift+F3)" />
+
+                <Button Width="32"
+                        hc:IconElement.Geometry="{StaticResource DownGeometry}"
+                        Command="{Binding GoToNextFindResultCommand}"
+                        Style="{StaticResource ButtonIcon}"
+                        ToolTip="下一个结果(F3)" />
+
+                <Button Width="32"
+                        hc:IconElement.Geometry="{StaticResource CloseGeometry}"
+                        Command="{Binding DisableFindCommand}"
+                        Style="{StaticResource ButtonIcon}"
+                        ToolTip="关闭(Esc)" />
+            </hc:UniformSpacingPanel>
+        </Grid>
+    </Border>
+</UserControl>
