@@ -132,11 +132,11 @@ public partial class CccfMainQueryViewModel : ObservableRecipient
 
     public string? LocalModeDisallowedToolTip => IsLocalModeAllowed ? null : "\n\n* 暂未对普通用户开放";
 
-    public string? LocalQueryTabToolTip => IsLocalQueryEnabled ? "Alt+2" : $"未启用本地查询功能{LocalModeDisallowedToolTip}";
+    public string? LocalQueryTabToolTip => IsLocalQueryEnabled ? "Alt+2" : $"未启用本地查询{LocalModeDisallowedToolTip}";
 
     public string LocalQueryToolTip => $"启用本地数据库查询 (如果可用){LocalModeDisallowedToolTip}";
 
-    public string? OnlineQueryTabToolTip => IsOnlineQueryEnabled ? "Alt+1" : "未启用在线查询功能";
+    public string? OnlineQueryTabToolTip => IsOnlineQueryEnabled ? "Alt+1" : "未启用在线查询";
 
     public string ToggleCombinedQueryToolTip => UseCombinedQuery ? "收起组合查询" : "展开组合查询";
 
