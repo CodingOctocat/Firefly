@@ -33,6 +33,8 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
 
     protected CccfRequest? _lastCombinedRequest;
 
+    protected int _lastPageNumberBeforeCancel = 1;
+
     protected bool _pageNumberChanged;
 
     protected bool _pageSizeChanged;
@@ -55,7 +57,7 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
 
     public bool CanQuery => !IsNavigating;
 
-    public bool CanRefresh => QueryResponse is not null && CanQuery;
+    public bool CanRefresh => CanQuery;
 
     public CccfRequest CccfRequest => UseCombinedQuery ? CombinedRequest : SmartRequest;
 
@@ -210,6 +212,7 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
     {
         try
         {
+            _lastPageNumberBeforeCancel = PageNumber;
             HasError = false;
             QueryResultMessage = "";
 
@@ -281,14 +284,36 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
             SmartRequest.RejectChanges();
             CccfRequest.RejectChanges();
 
-            await QueryCommand.ExecuteAsync(cancellationToken);
+            CccfQuerySession session;
+            PageNumber = _lastPageNumberBeforeCancel;
 
-            var session = new CccfQuerySession(
+            try
+            {
+                await QueryCommand.ExecuteAsync(cancellationToken);
+            }
+            catch (TaskCanceledException)
+            {
+                session = new CccfQuerySession(
+                    _lastPageNumberBeforeCancel,
+                    SmartRequest,
+                    CombinedRequest,
+                    UseCombinedQuery,
+                    QueryResponse,
+                    HasError,
+                    "刷新请求被取消。",
+                    _scrolledVerticalOffset);
+
+                return session;
+            }
+
+            session = new CccfQuerySession(
                 PageNumber,
                 SmartRequest,
                 CombinedRequest,
                 UseCombinedQuery,
                 QueryResponse,
+                HasError,
+                QueryResultMessage,
                 _scrolledVerticalOffset);
 
             return session;
@@ -363,6 +388,8 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
                 CombinedRequest,
                 UseCombinedQuery,
                 QueryResponse,
+                HasError,
+                QueryResultMessage,
                 0d);
 
             try
@@ -373,6 +400,7 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
             catch (TaskCanceledException)
             {
                 session.QueryResponse = null;
+                session.QueryResultMessage = "查询请求被取消。";
             }
 
             Messenger.Send(new ScrollBarOffsetMessage() {
@@ -419,6 +447,7 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
         if (e.NavigationMode is NavigationMode.Back or NavigationMode.Forward)
         {
             var cloned = e.Current.DeepClone();
+            _lastPageNumberBeforeCancel = cloned.PageNumber;
             PageNumber = cloned.PageNumber;
             SmartRequest = cloned.SmartRequest;
 
@@ -426,6 +455,8 @@ public abstract partial class CccfQueryViewModelBase : ObservableRecipient
             UseCombinedQuery = cloned.UseCombinedQuery;
             CombinedRequest = cloned.CombinedRequest;
             QueryResponse = cloned.QueryResponse;
+            HasError = cloned.HasError;
+            QueryResultMessage = cloned.QueryResultMessage;
 
             double scrolledVerticalOffset = cloned.ScrolledVerticalOffset;
 

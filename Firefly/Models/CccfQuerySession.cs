@@ -13,15 +13,19 @@ public class CccfQuerySession : NavigationSession<CccfQuerySession>
 {
     public CccfRequest CombinedRequest { get; set; }
 
-    public bool UseCombinedQuery { get; set; }
+    public bool HasError { get; set; }
 
     public int PageNumber { get; set; }
 
     public QueryResponse<Cccf>? QueryResponse { get; set; }
 
+    public string QueryResultMessage { get; set; }
+
     public double ScrolledVerticalOffset { get; set; }
 
     public CccfSmartRequest SmartRequest { get; set; }
+
+    public bool UseCombinedQuery { get; set; }
 
     public CccfQuerySession(
         int pageNumber,
@@ -29,6 +33,8 @@ public class CccfQuerySession : NavigationSession<CccfQuerySession>
         CccfRequest combinedRequest,
         bool useCombinedQuery,
         QueryResponse<Cccf>? queryResponse,
+        bool hasError,
+        string queryResultMessage,
         double scrolledVerticalOffset)
     {
         PageNumber = pageNumber;
@@ -36,6 +42,8 @@ public class CccfQuerySession : NavigationSession<CccfQuerySession>
         CombinedRequest = combinedRequest;
         UseCombinedQuery = useCombinedQuery;
         QueryResponse = queryResponse;
+        HasError = hasError;
+        QueryResultMessage = queryResultMessage;
         ScrolledVerticalOffset = scrolledVerticalOffset;
     }
 
@@ -47,6 +55,8 @@ public class CccfQuerySession : NavigationSession<CccfQuerySession>
             CombinedRequest.DeepClone(),
             UseCombinedQuery,
             QueryResponse,
+            HasError,
+            QueryResultMessage,
             ScrolledVerticalOffset);
     }
 
