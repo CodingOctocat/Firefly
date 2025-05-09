@@ -76,7 +76,7 @@ public partial class MenuViewModel : ObservableRecipient
 
     public bool IsLocalModeAllowed { get; }
 
-    public string? LocalModeDisallowedToolTip => IsLocalModeAllowed ? null : "\n\n* 本功能暂未对普通用户开放";
+    public string? LocalModeDisallowedToolTip => IsLocalModeAllowed ? null : "\n\n* 暂未对普通用户开放";
 
     public MainViewModel MainViewModel { get; }
 
