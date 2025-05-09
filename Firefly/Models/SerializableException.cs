@@ -13,7 +13,7 @@ public class SerializableException
     {
         public Dictionary<string, string?> Datas = [];
 
-        public int Depth { get; } = 0;
+        public int Depth { get; }
 
         public string? HelpLink { get; }
 
@@ -31,7 +31,10 @@ public class SerializableException
 
         public Type Type { get; }
 
-        public ExceptionWrapper(Exception exception)
+        public ExceptionWrapper(Exception exception) : this(exception, 0)
+        { }
+
+        private ExceptionWrapper(Exception exception, int depth)
         {
             Type = exception.GetType();
             Source = exception.Source;
@@ -40,21 +43,17 @@ public class SerializableException
             StackTrace = exception.StackTrace;
             HResult = exception.HResult;
             HelpLink = exception.HelpLink;
+            Depth = depth;
 
             foreach (DictionaryEntry data in exception.Data)
             {
                 Datas.Add($"{data.Key}", data.Value?.ToString());
             }
 
-            if (exception?.InnerException is not null)
+            if (exception.InnerException is not null)
             {
-                InnerException = new(exception.InnerException, Depth++);
+                InnerException = new ExceptionWrapper(exception.InnerException, depth + 1);
             }
-        }
-
-        private ExceptionWrapper(Exception exception, int depth) : this(exception)
-        {
-            Depth = depth;
         }
 
         public override string? ToString()
@@ -64,7 +63,7 @@ public class SerializableException
             sb.AppendLine($"{nameof(Source)}: {Source ?? "null"}");
             sb.AppendLine($"{nameof(Message)}: {Message ?? "null"}");
             sb.AppendLine($"{nameof(TargetSite)}: {TargetSite ?? "null"}");
-            sb.AppendLine($"{nameof(StackTrace)}:{Environment.NewLine}{StackTrace ?? "null"}");
+            sb.AppendLine($"{nameof(StackTrace)}:{(StackTrace is null ? " null" : $"{Environment.NewLine}{StackTrace}")}");
             sb.AppendLine($"{nameof(HResult)}: {HResult}");
             sb.AppendLine($"{nameof(HelpLink)}: {HelpLink ?? "null"}");
 
@@ -74,7 +73,7 @@ public class SerializableException
             }
             else
             {
-                sb.AppendLine($"{Environment.NewLine}--- Inner Exception (Level {Depth}) ---");
+                sb.AppendLine($"{Environment.NewLine}--- Inner Exception (Level {InnerException.Depth}) ---");
                 sb.AppendLine(InnerException.ToString());
             }
 
