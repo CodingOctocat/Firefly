@@ -145,7 +145,7 @@ public class CccfQuerySession : NavigationSession<CccfQuerySession>
         }
 
         sb.Append(" > ");
-        sb.Append(QueryResponse?.ToString() ?? "???");
+        sb.Append(QueryResponse?.ToString() ?? $"??? {{@{PageNumber}: {QueryResultMessage.Truncate(50)}}}");
 
         return sb.ToString();
     }

@@ -130,6 +130,21 @@ public static class StringExtensions
         return text;
     }
 
+    public static string Truncate(this string? value, int length)
+    {
+        if (!String.IsNullOrEmpty(value))
+        {
+            value = value.Trim();
+
+            if (value.Length > length)
+            {
+                return value[..length] + "...";
+            }
+        }
+
+        return value ?? String.Empty;
+    }
+
     private static bool MatchAnyFunc(Func<string, StringComparison, bool> func, IEnumerable<string> values, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
     {
         bool b = false;

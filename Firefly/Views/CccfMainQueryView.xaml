@@ -183,6 +183,11 @@
                                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
                                                 <Setter Property="IsHitTestVisible" Value="False" />
                                             </Trigger>
+
+                                            <DataTrigger Binding="{Binding HasError}"
+                                                         Value="{StaticResource True}">
+                                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </ContextMenu.ItemContainerStyle>
@@ -204,6 +209,13 @@
                                         <Setter Property="Command" Value="{Binding Data.GoForwardCommand, Source={StaticResource CccfQueryViewModelProxy}}" />
                                         <Setter Property="CommandParameter" Value="{Binding}" />
                                         <Setter Property="Padding" Value="-16,0,-32,0" />
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasError}"
+                                                         Value="{StaticResource True}">
+                                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
                                     </Style>
                                 </ContextMenu.ItemContainerStyle>
                             </ContextMenu>
