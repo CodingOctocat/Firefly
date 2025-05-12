@@ -14,9 +14,12 @@ namespace Firefly.Views;
 /// </summary>
 public partial class AboutWindow : HcWindow
 {
+    public AboutViewModel ViewModel { get; }
+
     public AboutWindow(AboutViewModel vm)
     {
         InitializeComponent();
+        ViewModel = vm;
 
         if (App.IsInDesignMode)
         {
@@ -34,5 +37,10 @@ public partial class AboutWindow : HcWindow
             var dep = (PackageDependency)item.DataContext;
             UriHelper.OpenUri($"https://www.nuget.org/packages/{dep.Name}");
         }
+    }
+
+    private async void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        await ViewModel.LoadedCommand.ExecuteAsync(null);
     }
 }

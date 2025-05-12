@@ -15,16 +15,18 @@
                                             IsDesignTimeCreatable=True}"
            Background="{DynamicResource RegionBrush}"
            Icon="/Resources/firefly.ico"
+           Loaded="Window_Loaded"
            ResizeMode="NoResize"
            SizeToContent="Width"
            UseLayoutRounding="True"
            WindowStartupLocation="CenterScreen"
            mc:Ignorable="d">
-    <i:Interaction.Triggers>
+    <!--  添加 Loaded InvokeCommandAction 行为有时无效，可能是手动创建/打开窗口的原因？  -->
+    <!--<i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
-    </i:Interaction.Triggers>
+    </i:Interaction.Triggers>-->
 
     <Grid Margin="12">
         <Grid.RowDefinitions>
