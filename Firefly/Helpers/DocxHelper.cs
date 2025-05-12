@@ -246,7 +246,7 @@ public static class DocxHelper
     {
         // 使用 cell.GetText() 则不保留换行符
         var texts = from p in cell.Paragraphs
-                    select p.Text;
+                    select p.ParagraphText;
 
         string text = String.Join(Environment.NewLine, texts);
 
