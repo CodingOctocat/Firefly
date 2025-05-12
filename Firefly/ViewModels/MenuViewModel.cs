@@ -170,7 +170,11 @@ public partial class MenuViewModel : ObservableRecipient
     [RelayCommand]
     private static void OpenRelativeFolder(string path)
     {
-        Directory.CreateDirectory(path);
+        if (!String.IsNullOrWhiteSpace(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
         FileHelper.OpenFolder(path, true);
     }
 
