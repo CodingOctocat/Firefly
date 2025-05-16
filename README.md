@@ -1,10 +1,13 @@
 # Firefly (萤火虫)
 
-[![Target framework](https://img.shields.io/badge/support-.NET_9.0--Windows7.0-blue)](https://github.com/CodingOctocat/Firefly)
-[![GitHub issues](https://img.shields.io/github/issues/CodingOctocat/Firefly)](https://github.com/CodingOctocat/Firefly/issues)
-[![GitHub stars](https://img.shields.io/github/stars/CodingOctocat/Firefly)](https://github.com/CodingOctocat/Firefly/stargazers)
-[![GitHub license](https://img.shields.io/github/license/CodingOctocat/Firefly)](https://github.com/CodingOctocat/Firefly/blob/master/LICENSE)
+[![Target Framework](https://img.shields.io/badge/support-.NET_9.0--Windows7.0-blue)](https://github.com/CodingOctocat/Firefly)
+[![GitHub Issues](https://img.shields.io/github/issues/CodingOctocat/Firefly)](https://github.com/CodingOctocat/Firefly/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/CodingOctocat/Firefly)](https://github.com/CodingOctocat/Firefly/stargazers)
+![GitHub Release](https://img.shields.io/github/v/release/CodingOctocat/Firefly)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/CodingOctocat/Firefly/total)
+[![GitHub License](https://img.shields.io/github/license/CodingOctocat/Firefly)](https://github.com/CodingOctocat/Firefly/blob/master/LICENSE)
 [![CodeFactor](https://www.codefactor.io/repository/github/codingoctocat/firefly/badge)](https://www.codefactor.io/repository/github/codingoctocat/firefly)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CodingOctocat/Firefly)
 
 CCCF 消防产品清单批量查询与检查标注工具。
 
