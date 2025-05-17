@@ -10,7 +10,7 @@
 		<ApplicationIcon>Resources\firefly.ico</ApplicationIcon>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 		<StartupObject>Firefly.App</StartupObject>
-		<Version>8.0.0</Version>
+		<Version>8.0.1</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<SignAssembly>True</SignAssembly>
 		<SatelliteResourceLanguages>zh-Hans;zh-CN</SatelliteResourceLanguages>
