@@ -154,7 +154,7 @@ public partial class VersionInfoViewModel : ObservableObject
             {App.VersionString} -> {ReleaseInfo.TagName}
             {ReleaseInfo.PublishedAt?.ToLocalTime():yyyy/MM/dd HH:mm:ss 'GMT'z}
 
-            What's Changed
+            发行说明:
             {body}
             """,
             ActionBeforeClose = (isConfirm) => {
