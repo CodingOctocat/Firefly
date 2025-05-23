@@ -66,6 +66,12 @@
             <MenuItem Command="{Binding OpenDocumentFolderCommand}"
                       Header="打开文档所在的位置(_O)"
                       ToolTip="{Binding FireflyViewModel.DocumentFolder}" />
+
+            <Separator />
+
+            <MenuItem Command="{Binding FireflyViewModel.ExportCommand}"
+                      Header="导出 FF 产品清单(_E)"
+                      ToolTip="程序会导出查询和检查结果，生成一个以 FF 开头的新文档" />
         </MenuItem>
 
         <MenuItem Header="编辑(_E)">

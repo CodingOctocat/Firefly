@@ -67,6 +67,8 @@ public partial class FireflyViewModel : ObservableRecipient
     [ObservableProperty]
     public partial bool CanDragDrop { get; private set; } = true;
 
+    public bool CanExport => FireTableService.FireCheckContexts.FirstOrDefault()?.IsChecked is true;
+
     public bool CanStart => IsDocumentLoaded && IsIdle;
 
     [ObservableProperty]
@@ -201,6 +203,22 @@ public partial class FireflyViewModel : ObservableRecipient
     #endregion Constructors & Recipients
 
     #region Commands
+
+    [RelayCommand(CanExecute = nameof(CanExport))]
+    public async Task ExportAsync()
+    {
+        if (FireTaskStatus != FireTaskStatus.Completed)
+        {
+            var result = HcMessageBox.Ask("部分任务未完成，已完成的结果将被写入文档。\n确定要导出？", App.AppName);
+
+            if (result != MessageBoxResult.OK)
+            {
+                return;
+            }
+        }
+
+        await WriteAsync();
+    }
 
     [RelayCommand]
     public void SetCustomColumnMappingAsDefault()
@@ -468,6 +486,8 @@ public partial class FireflyViewModel : ObservableRecipient
         finally
         {
             ProgressTimer.Stop();
+            OnPropertyChanged(nameof(CanExport));
+            ExportCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -714,6 +734,8 @@ public partial class FireflyViewModel : ObservableRecipient
         ProgressTimer.Reset(resetProgress);
         FireTaskStatus = FireTaskStatus.Normal;
         TaskbarItemProgressState = TaskbarItemProgressState.None;
+        OnPropertyChanged(nameof(CanExport));
+        ExportCommand.NotifyCanExecuteChanged();
     }
 
     private async Task UpdateFireTableColumnStateAsync()

@@ -16,7 +16,6 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Firefly.Factories;
 using Firefly.Helpers;
-using Firefly.Models;
 using Firefly.Models.Messages;
 using Firefly.Services.Abstractions;
 using Firefly.Views;
@@ -56,7 +55,7 @@ public partial class MenuViewModel : ObservableRecipient
 
     public bool CanOpenDocumentFolder => FireflyViewModel.IsFileSelected;
 
-    public bool CanOpenFFDocument => FireflyViewModel.FireTaskStatus == FireTaskStatus.Completed;
+    public bool CanOpenFFDocument => !String.IsNullOrEmpty(FireflyViewModel.OutputFilePath);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowCccfDbMergeWindowToolTip))]
@@ -406,6 +405,11 @@ public partial class MenuViewModel : ObservableRecipient
         }
 
         if (e.PropertyName == nameof(FireflyViewModel.FireTaskStatus))
+        {
+            OpenFFDocumentCommand.NotifyCanExecuteChanged();
+        }
+
+        if (e.PropertyName == nameof(FireflyViewModel.OutputFilePath))
         {
             OpenFFDocumentCommand.NotifyCanExecuteChanged();
         }
