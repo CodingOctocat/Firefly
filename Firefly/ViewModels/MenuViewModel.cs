@@ -79,7 +79,7 @@ public partial class MenuViewModel : ObservableRecipient
 
     public MainViewModel MainViewModel { get; }
 
-    public string OpenFFDocumentHeader => FireflyViewModel.OutputOrder > 0 ? $"打开 FF{FireflyViewModel.OutputOrder}__产品清单.docx(_B)" : "打开 FF__产品清单.docx(_B)";
+    public string OpenFFDocumentHeader => FireflyViewModel.OutputOrder > 0 ? $"打开 FF{FireflyViewModel.OutputOrder}__产品清单(_B)" : "打开 FF__产品清单(_B)";
 
     public string ShowCccfDbMergeWindowToolTip => CanShowCccfDbMergeWindow ? $"合并两个或更多本地数据库{LocalModeDisallowedToolTip}" : "程序已经在运行中...";
 
