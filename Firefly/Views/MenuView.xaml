@@ -108,13 +108,13 @@
                 </MenuItem.Header>
             </MenuItem>
 
+            <Separator />
+
             <MenuItem Command="{Binding MainViewModel.ManualQueryCccfCommand}"
                       Header="查询"
                       Icon="{StaticResource SearchIcon}"
                       InputGestureText="Ctrl+F"
                       ToolTip="你可以对选中的部分内容进行查询" />
-
-            <Separator />
 
             <MenuItem Command="{Binding MainViewModel.FindInPageCommand}"
                       Header="在页面上查找"
