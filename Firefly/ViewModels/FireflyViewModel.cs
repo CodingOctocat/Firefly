@@ -254,19 +254,13 @@ public partial class FireflyViewModel : ObservableRecipient
     [RelayCommand]
     private async Task LoadDocumentAsync(string? path)
     {
-        if (path is null)
-        {
-            path = InputFilePath;
-        }
-        else
-        {
-            InputFilePath = path;
-        }
+        path ??= InputFilePath;
+        bool reload = path == InputFilePath;
 
         if (FireTableService.FireCheckContexts.Any(x => x.Cccf is not null))
         {
-            string msg1 = path == InputFilePath ? "重新" : "";
-            string msg2 = path == InputFilePath ? "" : $"\n> {path}";
+            string msg1 = reload ? "重新" : "";
+            string msg2 = reload ? "" : $"\n> {path}";
 
             var result = HcMessageBox.Show(
                 $"当前检查视图将被清除。是否仍要{msg1}加载文档？{msg2}",
@@ -280,6 +274,8 @@ public partial class FireflyViewModel : ObservableRecipient
                 return;
             }
         }
+
+        InputFilePath = path;
 
         Reset(true);
 
