@@ -761,6 +761,7 @@ public partial class FireflyViewModel : ObservableRecipient
     private async Task WriteAsync()
     {
         IsWriting = true;
+        var lastTaskbarItemProgressState = TaskbarItemProgressState;
         TaskbarItemProgressState = TaskbarItemProgressState.Indeterminate;
 
         GetOutputFilePath();
@@ -773,6 +774,7 @@ public partial class FireflyViewModel : ObservableRecipient
         finally
         {
             IsWriting = false;
+            TaskbarItemProgressState = lastTaskbarItemProgressState;
         }
 
         Growl.Ask(new GrowlInfo {
