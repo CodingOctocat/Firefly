@@ -132,6 +132,8 @@ public partial class FireCheckContext : ObservableObject, IPageFindable<Findable
 
     private async Task QueryByPriorityAsync(List<CccfRequest> requests, CancellationToken cancellationToken)
     {
+        Exception? error = null;
+
         foreach (var request in requests)
         {
             try
@@ -145,7 +147,14 @@ public partial class FireCheckContext : ObservableObject, IPageFindable<Findable
                 }
             }
             catch (Exception ex) when (ex is not (TaskCanceledException or RateLimiterRejectedException))
-            { }
+            {
+                error = ex;
+            }
+        }
+
+        if (error is not null)
+        {
+            throw error;
         }
     }
 
