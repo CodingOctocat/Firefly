@@ -8,6 +8,13 @@ namespace Firefly.Behaviors;
 
 public static class AutoScrollBehavior
 {
+    public static readonly DependencyProperty AllowPauseProperty =
+        DependencyProperty.RegisterAttached(
+            "AllowPause",
+            typeof(bool),
+            typeof(AutoScrollBehavior),
+            new PropertyMetadata(false));
+
     public static readonly DependencyProperty IsEnabledProperty =
         DependencyProperty.RegisterAttached(
             "IsEnabled",
@@ -15,9 +22,19 @@ public static class AutoScrollBehavior
             typeof(AutoScrollBehavior),
             new PropertyMetadata(false, OnIsEnabledChanged));
 
+    public static bool GetAllowPause(DependencyObject obj)
+    {
+        return (bool)obj.GetValue(AllowPauseProperty);
+    }
+
     public static bool GetIsEnabled(DependencyObject element)
     {
         return (bool)element.GetValue(IsEnabledProperty);
+    }
+
+    public static void SetAllowPause(DependencyObject obj, bool value)
+    {
+        obj.SetValue(AllowPauseProperty, value);
     }
 
     public static void SetIsEnabled(DependencyObject element, bool value)
@@ -39,6 +56,7 @@ public static class AutoScrollBehavior
             return;
         }
 
+        bool allowPause = GetAllowPause(itemsControl);
         bool autoScroll = true;
 
         scrollViewer.ScrollChanged += (s, ev) => {
@@ -48,14 +66,14 @@ public static class AutoScrollBehavior
             }
             else
             {
-                autoScroll = false;
+                autoScroll = !allowPause;
             }
         };
 
         if (itemsControl.ItemsSource is INotifyCollectionChanged notifyCollection)
         {
             notifyCollection.CollectionChanged += (s, ev) => {
-                if (autoScroll)
+                if (autoScroll && ev.Action == NotifyCollectionChangedAction.Add)
                 {
                     scrollViewer.ScrollToEnd();
                 }

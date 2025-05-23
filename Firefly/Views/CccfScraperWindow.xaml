@@ -338,6 +338,7 @@
                                         TransitionMode="Top2BottomWithFade"
                                         Visibility="{Binding ShowLogs, Converter={StaticResource Boolean2VisibilityConverter}}">
             <DataGrid x:Name="dgLogs"
+                      b:AutoScrollBehavior.AllowPause="True"
                       b:AutoScrollBehavior.IsEnabled="True"
                       d:ItemsSource="{d:SampleData ItemCount=5}"
                       hc:Empty.ShowEmpty="True"
