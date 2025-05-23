@@ -90,12 +90,10 @@ public partial class VersionInfoViewModel : ObservableObject
             await GetReleaseInfoAsync();
         }
 
-        if (!showGrowl)
+        if (showGrowl)
         {
-            return;
+            ShowReleaseResult();
         }
-
-        ShowReleaseResult();
     }
 
     [RelayCommand]
