@@ -41,12 +41,12 @@ public partial class FireTableService : ObservableObject, IDisposable
         _fireTableWriter = fireTableWriter;
     }
 
-    public async Task CheckAsync(int delay = 500, IProgress<int>? progress = default, CancellationToken cancellationToken = default)
+    public async Task CheckAsync(int start = 0, int delay = 500, IProgress<int>? progress = default, CancellationToken cancellationToken = default)
     {
-        ErrorItemsCount = 0;
-        int i = 1;
+        ErrorItemsCount = FireCheckContexts.Take(start).Count(x => x.HasError is true);
+        int i = start + 1;
 
-        foreach (var ctx in FireCheckContexts)
+        foreach (var ctx in FireCheckContexts.Skip(start))
         {
             progress?.Report(i++);
             await ctx.CheckCommand.ExecuteAsync(cancellationToken);

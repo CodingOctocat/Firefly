@@ -281,7 +281,7 @@ public partial class FireflyViewModel : ObservableRecipient
             }
         }
 
-        Reset();
+        Reset(true);
 
         TaskbarItemProgressState = TaskbarItemProgressState.Indeterminate;
 
@@ -396,7 +396,38 @@ public partial class FireflyViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(CanStart), IncludeCancelCommand = true)]
     private async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        Reset();
+        int startProgress = Math.Max(0, ProgressTimer.CurrentProgress - 1);
+
+        if (FireTaskStatus is FireTaskStatus.Cancelled or FireTaskStatus.Error)
+        {
+            var result = HcMessageBox.Show(
+                $"""
+                上一次任务未完成 (状态: {FireTaskStatus.GetDescription()})。
+                是否要继续任务？
+
+                [是]: 从第 {startProgress + 1} 项开始
+                [否]: 重新开始
+                """,
+                 App.AppName,
+                 MessageBoxButton.YesNoCancel,
+                 MessageBoxImage.Question,
+                 MessageBoxResult.Yes);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                ProgressTimer.UpdateProgress(startProgress);
+                Reset(false);
+            }
+            else if (result == MessageBoxResult.No)
+            {
+                Reset(true);
+            }
+            else if (result == MessageBoxResult.Cancel)
+            {
+                return;
+            }
+        }
+
         TaskbarItemProgressState = TaskbarItemProgressState.Normal;
         ProgressTimer.Start();
 
@@ -405,7 +436,7 @@ public partial class FireflyViewModel : ObservableRecipient
 
         try
         {
-            await FireTableService.CheckAsync(QueryDelay, progress, cancellationToken);
+            await FireTableService.CheckAsync(startProgress, QueryDelay, progress, cancellationToken);
             await WriteAsync();
 
             ProgressTimer.Stop(true);
@@ -674,16 +705,19 @@ public partial class FireflyViewModel : ObservableRecipient
         StartCommand.NotifyCanExecuteChanged();
     }
 
-    private void Reset()
+    private void Reset(bool resetProgress)
     {
-        foreach (var fireCheckContext in FireTableService.FireCheckContexts)
+        if (resetProgress)
         {
-            fireCheckContext.Reset();
+            foreach (var fireCheckContext in FireTableService.FireCheckContexts)
+            {
+                fireCheckContext.Reset();
+            }
         }
 
+        ProgressTimer.Reset(resetProgress);
         FireTaskStatus = FireTaskStatus.Normal;
         TaskbarItemProgressState = TaskbarItemProgressState.None;
-        ProgressTimer.Reset();
     }
 
     private async Task UpdateFireTableColumnStateAsync()

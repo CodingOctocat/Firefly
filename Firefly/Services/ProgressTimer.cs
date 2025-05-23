@@ -49,11 +49,15 @@ public sealed partial class ProgressTimer : ObservableObject, IDisposable
         _timer.Dispose();
     }
 
-    public void Reset()
+    public void Reset(bool resetProgress = true)
     {
+        if (resetProgress)
+        {
+            CurrentProgress = 0;
+        }
+
         UsedTime = TimeSpan.Zero;
         Countdown = TimeSpan.Zero;
-        CurrentProgress = 0;
     }
 
     public void Start(bool countDownToZero = false)
