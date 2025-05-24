@@ -9,21 +9,21 @@ namespace Firefly.Behaviors;
 
 public static class AutoRowNumberBehavior
 {
-    public static readonly DependencyProperty EnableAutoRowNumbersProperty =
+    public static readonly DependencyProperty IsEnabledProperty =
         DependencyProperty.RegisterAttached(
-            "EnableAutoRowNumbers",
+            "IsEnabled",
             typeof(bool),
             typeof(AutoRowNumberBehavior),
-            new PropertyMetadata(false, OnEnableAutoRowNumbersChanged));
+            new PropertyMetadata(false, OnIsEnabledChanged));
 
-    public static bool GetEnableAutoRowNumbers(DependencyObject obj)
+    public static bool GetIsEnabled(DependencyObject obj)
     {
-        return (bool)obj.GetValue(EnableAutoRowNumbersProperty);
+        return (bool)obj.GetValue(IsEnabledProperty);
     }
 
-    public static void SetEnableAutoRowNumbers(DependencyObject obj, bool value)
+    public static void SetIsEnabled(DependencyObject obj, bool value)
     {
-        obj.SetValue(EnableAutoRowNumbersProperty, value);
+        obj.SetValue(IsEnabledProperty, value);
     }
 
     private static void ItemsControl_Loaded(object sender, RoutedEventArgs e)
@@ -52,7 +52,7 @@ public static class AutoRowNumberBehavior
         RefreshRowNumbers(itemsControl);
     }
 
-    private static void OnEnableAutoRowNumbersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not ItemsControl itemsControl)
         {

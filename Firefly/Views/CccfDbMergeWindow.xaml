@@ -176,7 +176,7 @@
                  MinHeight="88"
                  MaxHeight="310"
                  Padding="4"
-                 b:AutoRowNumberBehavior.EnableAutoRowNumbers="True"
+                 b:AutoRowNumberBehavior.IsEnabled="True"
                  d:ItemsSource="{d:SampleData ItemCount=5}"
                  dd:DragDrop.CanDragWithMouseRightButton="False"
                  dd:DragDrop.IsDragSource="True"

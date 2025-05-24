@@ -26,28 +26,27 @@ public static class ScrollViewerHelper
             typeof(ScrollViewerHelper),
             new PropertyMetadata(1.0));
 
-    public static bool GetShiftWheelScrollsHorizontally(UIElement element)
+    public static bool GetShiftWheelScrollsHorizontally(DependencyObject obj)
     {
-        return (bool)element.GetValue(ShiftWheelScrollsHorizontallyProperty);
+        return (bool)obj.GetValue(ShiftWheelScrollsHorizontallyProperty);
     }
 
-    public static double GetShiftWheelScrollSpeed(UIElement element)
+    public static double GetShiftWheelScrollSpeed(DependencyObject obj)
     {
-        return (double)element.GetValue(ShiftWheelScrollSpeedProperty);
+        return (double)obj.GetValue(ShiftWheelScrollSpeedProperty);
     }
 
-    public static void SetShiftWheelScrollsHorizontally(UIElement element, bool value)
+    public static void SetShiftWheelScrollsHorizontally(DependencyObject obj, bool value)
     {
-        element.SetValue(ShiftWheelScrollsHorizontallyProperty, value);
+        obj.SetValue(ShiftWheelScrollsHorizontallyProperty, value);
     }
 
-    // 默认滚动速率为 1.0
-    public static void SetShiftWheelScrollSpeed(UIElement element, double value)
+    public static void SetShiftWheelScrollSpeed(DependencyObject obj, double value)
     {
-        element.SetValue(ShiftWheelScrollSpeedProperty, value);
+        obj.SetValue(ShiftWheelScrollSpeedProperty, value);
     }
 
-    private static void OnPreviewMouseWheel(object sender, MouseWheelEventArgs args)
+    private static void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         if (Keyboard.Modifiers != ModifierKeys.Shift)
         {
@@ -67,27 +66,27 @@ public static class ScrollViewerHelper
         }
 
         double scrollSpeed = GetShiftWheelScrollSpeed(d);
-        double offset = scrollSpeed * (args.Delta > 0 ? -1 : 1);
+        double offset = scrollSpeed * (e.Delta > 0 ? -1 : 1);
 
         scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset + (offset * 48));
 
-        args.Handled = true;
+        e.Handled = true;
     }
 
     private static void UseHorizontalScrollingChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not UIElement element)
+        if (d is not UIElement uiElement)
         {
             throw new Exception("Attached property must be used with UIElement.");
         }
 
         if ((bool)e.NewValue)
         {
-            element.PreviewMouseWheel += OnPreviewMouseWheel;
+            uiElement.PreviewMouseWheel += OnPreviewMouseWheel;
         }
         else
         {
-            element.PreviewMouseWheel -= OnPreviewMouseWheel;
+            uiElement.PreviewMouseWheel -= OnPreviewMouseWheel;
         }
     }
 }

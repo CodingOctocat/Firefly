@@ -16,27 +16,27 @@ public class TripleClickToSelectAllBehavior
             typeof(TripleClickToSelectAllBehavior),
             new PropertyMetadata(false, OnPropertyChanged));
 
-    public static bool GetIsEnabled(DependencyObject element)
+    public static bool GetIsEnabled(DependencyObject obj)
     {
-        return (bool)element.GetValue(IsEnabledProperty);
+        return (bool)obj.GetValue(IsEnabledProperty);
     }
 
-    public static void SetIsEnabled(DependencyObject element, bool value)
+    public static void SetIsEnabled(DependencyObject obj, bool value)
     {
-        element.SetValue(IsEnabledProperty, value);
+        obj.SetValue(IsEnabledProperty, value);
     }
 
     private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is TextBox tb)
+        if (d is TextBox textBox)
         {
             if ((bool)e.NewValue)
             {
-                tb.PreviewMouseLeftButtonDown += OnTextBoxMouseDown;
+                textBox.PreviewMouseLeftButtonDown += OnTextBoxMouseDown;
             }
             else
             {
-                tb.PreviewMouseLeftButtonDown -= OnTextBoxMouseDown;
+                textBox.PreviewMouseLeftButtonDown -= OnTextBoxMouseDown;
             }
         }
     }

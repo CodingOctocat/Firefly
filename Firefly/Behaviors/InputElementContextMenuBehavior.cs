@@ -12,14 +12,14 @@ public static class InputElementContextMenuBehavior
             typeof(InputElementContextMenuBehavior),
             new PropertyMetadata(false, OnUseCustomStyleChanged));
 
-    public static bool GetUseCustomStyle(DependencyObject element)
+    public static bool GetUseCustomStyle(DependencyObject obj)
     {
-        return (bool)element.GetValue(UseCustomStyleProperty);
+        return (bool)obj.GetValue(UseCustomStyleProperty);
     }
 
-    public static void SetUseCustomStyle(DependencyObject element, bool value)
+    public static void SetUseCustomStyle(DependencyObject obj, bool value)
     {
-        element.SetValue(UseCustomStyleProperty, value);
+        obj.SetValue(UseCustomStyleProperty, value);
     }
 
     private static void OnUseCustomStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

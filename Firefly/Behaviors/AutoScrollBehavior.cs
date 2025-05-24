@@ -27,9 +27,9 @@ public static class AutoScrollBehavior
         return (bool)obj.GetValue(AllowPauseProperty);
     }
 
-    public static bool GetIsEnabled(DependencyObject element)
+    public static bool GetIsEnabled(DependencyObject obj)
     {
-        return (bool)element.GetValue(IsEnabledProperty);
+        return (bool)obj.GetValue(IsEnabledProperty);
     }
 
     public static void SetAllowPause(DependencyObject obj, bool value)
@@ -37,9 +37,9 @@ public static class AutoScrollBehavior
         obj.SetValue(AllowPauseProperty, value);
     }
 
-    public static void SetIsEnabled(DependencyObject element, bool value)
+    public static void SetIsEnabled(DependencyObject obj, bool value)
     {
-        element.SetValue(IsEnabledProperty, value);
+        obj.SetValue(IsEnabledProperty, value);
     }
 
     private static void ItemsControl_Loaded(object sender, RoutedEventArgs e)

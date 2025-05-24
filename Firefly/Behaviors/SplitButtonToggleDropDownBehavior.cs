@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -27,7 +28,7 @@ public class SplitButtonToggleDropDownBehavior : Behavior<SplitButton>
         base.OnDetaching();
     }
 
-    private void AssociatedObject_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void AssociatedObject_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         var result = VisualTreeHelper.HitTest(AssociatedObject, e.GetPosition(AssociatedObject));
 

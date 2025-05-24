@@ -13,7 +13,6 @@ namespace Firefly.Behaviors;
 /// </summary>
 public sealed class IgnoreMouseWheelBehavior : Behavior<UIElement>
 {
-    // Using a DependencyProperty as the backing store for IsEnabled.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IsEnabledProperty =
         DependencyProperty.RegisterAttached(
             "IsEnabled",
@@ -47,15 +46,15 @@ public sealed class IgnoreMouseWheelBehavior : Behavior<UIElement>
 
     private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is UIElement uie)
+        if (d is UIElement uiElement)
         {
             if ((bool)e.NewValue)
             {
-                uie.PreviewMouseWheel += OnPreviewMouseWheel;
+                uiElement.PreviewMouseWheel += OnPreviewMouseWheel;
             }
             else
             {
-                uie.PreviewMouseWheel -= OnPreviewMouseWheel;
+                uiElement.PreviewMouseWheel -= OnPreviewMouseWheel;
             }
         }
     }
@@ -69,11 +68,11 @@ public sealed class IgnoreMouseWheelBehavior : Behavior<UIElement>
 
         e.Handled = true;
 
-        var e2 = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) {
+        var args = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) {
             RoutedEvent = UIElement.MouseWheelEvent
         };
 
-        ((UIElement)sender).RaiseEvent(e2);
+        ((UIElement)sender).RaiseEvent(args);
     }
 
     private void AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -85,10 +84,10 @@ public sealed class IgnoreMouseWheelBehavior : Behavior<UIElement>
 
         e.Handled = true;
 
-        var e2 = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) {
+        var args = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) {
             RoutedEvent = UIElement.MouseWheelEvent
         };
 
-        AssociatedObject.RaiseEvent(e2);
+        AssociatedObject.RaiseEvent(args);
     }
 }

@@ -15,7 +15,6 @@ namespace Firefly.Behaviors;
 
 public class DataGridScrollFindableToCenterBehavior : Behavior<DataGrid>, IScrollFindableToCenter
 {
-    // Using a DependencyProperty as the backing store for Client.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ClientProperty =
         DependencyProperty.Register(
             "Client",
@@ -23,7 +22,6 @@ public class DataGridScrollFindableToCenterBehavior : Behavior<DataGrid>, IScrol
             typeof(DataGridScrollFindableToCenterBehavior),
             new PropertyMetadata(null));
 
-    // Using a DependencyProperty as the backing store for FindableScopes.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty FindableScopesProperty =
         DependencyProperty.Register(
             "FindableScopes",

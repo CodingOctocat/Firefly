@@ -236,7 +236,7 @@
                       Margin="8,0,0,0"
                       Header="跳过规则">
                 <DataGrid x:Name="dgSkipRowRules"
-                          b:AutoRowNumberBehavior.EnableAutoRowNumbers="True"
+                          b:AutoRowNumberBehavior.IsEnabled="True"
                           b:AutoScrollBehavior.IsEnabled="True"
                           d:ItemsSource="{d:SampleData ItemCount=5}"
                           dd:DragDrop.CanDragWithMouseRightButton="False"
