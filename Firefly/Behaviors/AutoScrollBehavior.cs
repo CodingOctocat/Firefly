@@ -44,7 +44,7 @@ public static class AutoScrollBehavior
 
     private static void ItemsControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (sender is not ItemsControl itemsControl)
+        if (sender is not ItemsControl itemsControl || itemsControl.ItemsSource is not INotifyCollectionChanged notifyCollection)
         {
             return;
         }
@@ -59,26 +59,31 @@ public static class AutoScrollBehavior
         bool allowPause = GetAllowPause(itemsControl);
         bool autoScroll = true;
 
-        scrollViewer.ScrollChanged += (s, ev) => {
-            if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
-            {
-                autoScroll = true;
-            }
-            else
-            {
-                autoScroll = !allowPause;
-            }
-        };
-
-        if (itemsControl.ItemsSource is INotifyCollectionChanged notifyCollection)
+        void ScrollChangedHandler(object s, ScrollChangedEventArgs args)
         {
-            notifyCollection.CollectionChanged += (s, ev) => {
-                if (autoScroll && ev.Action == NotifyCollectionChangedAction.Add)
-                {
-                    scrollViewer.ScrollToEnd();
-                }
-            };
+            autoScroll = scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight || !allowPause;
         }
+
+        scrollViewer.ScrollChanged += ScrollChangedHandler;
+
+        void CollectionChangedHandler(object? s, NotifyCollectionChangedEventArgs args)
+        {
+            if (autoScroll && args.Action == NotifyCollectionChangedAction.Add)
+            {
+                scrollViewer.ScrollToEnd();
+            }
+        }
+
+        notifyCollection.CollectionChanged += CollectionChangedHandler;
+
+        void UnloadedHandler(object s, RoutedEventArgs args)
+        {
+            scrollViewer.ScrollChanged -= ScrollChangedHandler;
+            notifyCollection.CollectionChanged -= CollectionChangedHandler;
+            itemsControl.Unloaded -= UnloadedHandler;
+        }
+
+        itemsControl.Unloaded += UnloadedHandler;
     }
 
     private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

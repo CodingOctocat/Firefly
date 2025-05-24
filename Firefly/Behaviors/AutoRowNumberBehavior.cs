@@ -28,19 +28,26 @@ public static class AutoRowNumberBehavior
 
     private static void ItemsControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (sender is not ItemsControl itemsControl)
+        if (sender is not ItemsControl itemsControl || itemsControl.ItemsSource is not INotifyCollectionChanged notifyCollection)
         {
             return;
         }
 
-        if (itemsControl.ItemsSource is not INotifyCollectionChanged collection)
+        void CollectionChangedHandler(object? s, NotifyCollectionChangedEventArgs args)
         {
-            return;
+            // DispatcherPriority.Render 确保 UI 更新后再执行 RefreshRowNumbers()
+            itemsControl.Dispatcher.Invoke(() => RefreshRowNumbers(itemsControl), DispatcherPriority.Render);
         }
 
-        // DispatcherPriority.Render 确保 UI 更新后再执行 RefreshRowNumbers()
-        collection.CollectionChanged += (s, args)
-            => itemsControl.Dispatcher.Invoke(() => RefreshRowNumbers(itemsControl), DispatcherPriority.Render);
+        notifyCollection.CollectionChanged += CollectionChangedHandler;
+
+        void UnloadedHandler(object s, RoutedEventArgs args)
+        {
+            notifyCollection.CollectionChanged -= CollectionChangedHandler;
+            itemsControl.Unloaded -= UnloadedHandler;
+        }
+
+        itemsControl.Unloaded += UnloadedHandler;
 
         RefreshRowNumbers(itemsControl);
     }
