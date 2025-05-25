@@ -121,6 +121,12 @@ public partial class MainViewModel : ObservableRecipient
 
             e.Cancel = result != MessageBoxResult.OK;
         }
+        else if (FireflyViewModel.CanExport)
+        {
+            var result = HcMessageBox.Ask("确定要退出吗？", App.AppName);
+
+            e.Cancel = result != MessageBoxResult.OK;
+        }
     }
 
     [RelayCommand]
