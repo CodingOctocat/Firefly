@@ -77,15 +77,15 @@ public static class ThemeManager
         });
 
         App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary {
-            Source = new("/Styles/FixHandyControlTextBoxPlusTemplate.xaml", UriKind.Relative)
+            Source = new("/Styles/FixedHandyControlTextBoxPlusTemplate.xaml", UriKind.Relative)
         });
 
         App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary {
-            Source = new("/Styles/FixHandyControlSearchBarPlusTemplate.xaml", UriKind.Relative)
+            Source = new("/Styles/FixedHandyControlSearchBarPlusTemplate.xaml", UriKind.Relative)
         });
 
         App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary {
-            Source = new("/Styles/FixHandyControlComboBoxEditableLeftTemplate.xaml", UriKind.Relative)
+            Source = new("/Styles/FixedHandyControlComboBoxEditableLeftTemplate.xaml", UriKind.Relative)
         });
 
         App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary {

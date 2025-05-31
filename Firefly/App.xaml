@@ -7,9 +7,9 @@
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
 
-                <ResourceDictionary Source="/Styles/FixHandyControlTextBoxPlusTemplate.xaml" />
-                <ResourceDictionary Source="/Styles/FixHandyControlSearchBarPlusTemplate.xaml" />
-                <ResourceDictionary Source="/Styles/FixHandyControlComboBoxEditableLeftTemplate.xaml" />
+                <ResourceDictionary Source="/Styles/FixedHandyControlTextBoxPlusTemplate.xaml" />
+                <ResourceDictionary Source="/Styles/FixedHandyControlSearchBarPlusTemplate.xaml" />
+                <ResourceDictionary Source="/Styles/FixedHandyControlComboBoxEditableLeftTemplate.xaml" />
 
                 <ResourceDictionary Source="/Styles/MyResources.xaml" />
 
