@@ -87,8 +87,6 @@
         <Setter Property="Width" Value="12" />
     </Style>
 
-
-
     <Style x:Key="IconViewBoxStyle"
            TargetType="{x:Type Viewbox}">
         <Setter Property="Height" Value="16" />
