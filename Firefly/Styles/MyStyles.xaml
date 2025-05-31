@@ -4,6 +4,7 @@
                     xmlns:c="clr-namespace:Firefly.Controls"
                     xmlns:hc="https://handyorg.github.io/handycontrol"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
     <!--
         HandyControl.ThirdlyTextBrush 控制 hc:InfoElement.Placeholder 的颜色
         但是太淡了，这里覆盖提升为 SecondaryTextColor
