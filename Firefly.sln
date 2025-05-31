@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly", "Firefly\Firefly.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{53076C4A-5B51-488E-910A-412D5A18CA10}"
 	ProjectSection(SolutionItems) = preProject
-		..\IPConfig\.editorconfig = ..\IPConfig\.editorconfig
+		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
