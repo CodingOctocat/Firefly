@@ -30,7 +30,7 @@ public static class VisualTreeHelperEx
         return null;
     }
 
-    public static IEnumerable<T> FindVisualChildrens<T>(DependencyObject parent, Predicate<T>? predicate = null) where T : DependencyObject
+    public static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent, Predicate<T>? predicate = null) where T : DependencyObject
     {
         if (parent is null)
         {
@@ -48,7 +48,7 @@ public static class VisualTreeHelperEx
                 yield return typedChild;
             }
 
-            foreach (var descendant in FindVisualChildrens(child, predicate))
+            foreach (var descendant in FindVisualChildren(child, predicate))
             {
                 yield return descendant;
             }
